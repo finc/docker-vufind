@@ -1,0 +1,10 @@
+vufind2:
+  image: useltmann/vufind2
+
+  ports:
+    - "127.0.0.1:80:80"
+    - "127.0.0.1:443:443"
+    - "127.0.0.1:8080:8080"
+  volumes:
+    - /home/seltmann/projects/php/vufind2/:/usr/local/vufind2
+

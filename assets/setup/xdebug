@@ -1,0 +1,3 @@
+#!/bin/bash
+
+sed -e "s/^\(xdebug\.remote_host\).*\$/\1 = ${DOCKERHOST}/" -i /etc/php5/conf.d/20-xdebug.ini

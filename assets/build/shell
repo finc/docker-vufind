@@ -1,0 +1,5 @@
+#!/bin/bash
+
+set -e
+
+sed -e 's!^\(#\+\s*\)\(".*history-search-.*\)$!\2!g' -i /etc/inputrc

@@ -1,0 +1,21 @@
+#!/bin/bash
+
+set -e
+
+WEBGRIND_ARCHIVE="webgrind-release-1.0.zip"
+WEBGRIND_ROOT="/usr/local"
+
+wget -q https://webgrind.googlecode.com/files/${WEBGRIND_ARCHIVE}
+unzip ${WEBGRIND_ARCHIVE} -d ${WEBGRIND_ROOT}
+rm ${WEBGRIND_ARCHIVE}
+
+cat <<EOF >/etc/apache2/sites-available/webgrind
+Alias /webgrind /usr/local/webgrind
+
+<Directory /usr/local/webgrind>
+    FCGIWrapper /var/www/fcgid/php-fcgi .php
+    Options +ExecCGI
+</Directory>
+EOF
+
+a2ensite webgrind
