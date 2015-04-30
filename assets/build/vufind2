@@ -1,0 +1,19 @@
+#!/bin/bash
+
+pear upgrade pear
+pear channel-discover pear.phing.info
+pear channel-update pear.phing.info
+pear install --onlyreqdeps phing/phing
+
+cat > /etc/supervisor/conf.d/solr.conf <<EOF
+[program:solr]
+priority = 20
+directory = /tmp
+command = /docker/run/solr
+user = vufind2
+autostart = false
+autorestart = true
+stdout_logfile = ${LOG_DIR}/supervisor/%(program_name)s.log
+stderr_logfile = ${LOG_DIR}/supervisor/%(program_name)s.log
+EOF
+
