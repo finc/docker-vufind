@@ -4,7 +4,7 @@ set -e
 VUFIND_SOLR="${VUFIND_SOLR:-local}"
 
 VUFIND2_HTTPD_CONF="${APP_HOME}/${VUFIND2_HTTPD_CONF:-local/httpd-vufind.conf}"
-VUFIND2_HTTPD_LINK="/etc/apache2/sites-enabled/httpd-vufind2.conf"
+VUFIND2_HTTPD_LINK="/etc/apache2/sites-enabled/00-httpd-vufind2.conf"
 
 if [ ! -e "${VUFIND2_HTTPD_CONF}" ];then
     su -l dev -c "php ${APP_HOME}/install.php --non-interactive"
@@ -15,7 +15,6 @@ fi;
 if [ ! -h "${VUFIND2_HTTPD_LINK}" ]; then
     ln -s ${VUFIND2_HTTPD_CONF} ${VUFIND2_HTTPD_LINK}
 fi;
-
 
 if [ "${VUFIND_SOLR}" == "local" ]; then
 	echo "Setting up Vufind2 Solr for autostart ..."

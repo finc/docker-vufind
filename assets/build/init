@@ -1,8 +1,8 @@
 #!/bin/bash
 set -e
 
-VUFIND_HOME="/usr/local/vufind2"
-BUILD_DIR="/app/build"
+APP_HOME="/app"
+BUILD_DIR="/docker/build"
 LOG_DIR="/var/log"
 
 for i in `ls -A ${BUILD_DIR}`; do
