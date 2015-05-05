@@ -8,15 +8,16 @@ VUFIND2_HTTPD_LINK="/etc/apache2/sites-enabled/00-httpd-vufind2.conf"
 
 if [ ! -e "${VUFIND2_HTTPD_CONF}" ];then
     su -l dev -c "php ${APP_HOME}/install.php --non-interactive"
-    # we have to remove all php_value options since we dont use php as apache2 module
-    sed -e 's/\(^\s*php_value\s\+.*\)/#\1/' -i ${VUFIND2_HTTPD_CONF}
 fi;
+
+# we have to remove all php_value options since we dont use php as apache2 module
+sed -e 's/\(^\s*php_value\s\+.*\)/#\1/' -i ${VUFIND2_HTTPD_CONF}
 
 if [ ! -h "${VUFIND2_HTTPD_LINK}" ]; then
     ln -s ${VUFIND2_HTTPD_CONF} ${VUFIND2_HTTPD_LINK}
 fi;
 
 if [ "${VUFIND_SOLR}" == "local" ]; then
-	echo "Setting up Vufind2 Solr for autostart ..."
-	sed -e 's/^\(^\s*autostart\s*=\s*\).*$/\1true/' -i /etc/supervisor/conf.d/solr.conf
+    echo "Setting up Vufind2 Solr for autostart ..."
+    sed -e 's/^\(^\s*autostart\s*=\s*\).*$/\1true/' -i /etc/supervisor/conf.d/solr.conf
 fi;

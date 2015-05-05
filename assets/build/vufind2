@@ -10,7 +10,7 @@ cat > /etc/supervisor/conf.d/solr.conf <<EOF
 priority = 20
 directory = /tmp
 command = /docker/run/solr
-user = vufind2
+user = dev
 autostart = false
 autorestart = true
 stdout_logfile = ${LOG_DIR}/supervisor/%(program_name)s.log
