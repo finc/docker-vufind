@@ -50,7 +50,7 @@ if you are going to use a remote solr server to serve your search requests, then
 
 if you have a different vufind-setup, then you can provide a path to your httpd-vufind.conf relative to your vufind2 basepath.
 
-    -e "VUFIND2_HTTPD_CONF=local/dev/httpd-vufind.conf"
+    -e "VUFIND_HTTPD_CONF=local/dev/httpd-vufind.conf"
     
 _be aware that the path has to be accessable from withing the container and the specified file must exist, otherwise the starting the container will fail_
 
@@ -115,10 +115,7 @@ please refer to the website for further explanation.
 
 ## ToDo
 
-* ssl
 * phpunit
-* phing
-* solr as nonroot
 
 
   [1]: http://vufind.org/

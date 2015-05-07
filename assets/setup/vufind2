@@ -3,18 +3,21 @@
 set -e
 VUFIND_SOLR="${VUFIND_SOLR:-local}"
 
-VUFIND2_HTTPD_CONF="${APP_HOME}/${VUFIND2_HTTPD_CONF:-local/httpd-vufind.conf}"
-VUFIND2_HTTPD_LINK="/etc/apache2/sites-enabled/00-httpd-vufind2.conf"
+VUFIND_HTTPD_CONF="${APP_HOME}/${VUFIND_HTTPD_CONF:-local/httpd-vufind.conf}"
+VUFIND_HTTPD_LINK="/etc/apache2/sites-enabled/00-httpd-vufind2.conf"
 
-if [ ! -e "${VUFIND2_HTTPD_CONF}" ];then
+if [ ! -e "${VUFIND_HTTPD_CONF}" ];then
     su -l dev -c "php ${APP_HOME}/install.php --non-interactive"
 fi;
 
 # we have to remove all php_value options since we dont use php as apache2 module
-sed -e 's/\(^\s*php_value\s\+.*\)/#\1/' -i ${VUFIND2_HTTPD_CONF}
+sed -e 's/\(^\s*php_value\s\+.*\)/#\1/' -i ${VUFIND_HTTPD_CONF}
 
-if [ ! -h "${VUFIND2_HTTPD_LINK}" ]; then
-    ln -s ${VUFIND2_HTTPD_CONF} ${VUFIND2_HTTPD_LINK}
+# we change vufinds default path to ${APP_HOME}'s path
+sed -e 's!/usr/local/vufind2!'${APP_HOME}'!g' -i ${VUFIND_HTTPD_CONF}
+
+if [ ! -h "${VUFIND_HTTPD_LINK}" ]; then
+    ln -s ${VUFIND_HTTPD_CONF} ${VUFIND_HTTPD_LINK}
 fi;
 
 if [ "${VUFIND_SOLR}" == "local" ]; then
