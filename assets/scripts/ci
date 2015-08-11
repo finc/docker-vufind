@@ -1,0 +1,5 @@
+#!/bin/bash
+
+/docker/scripts/phpunit
+/docker/scripts/phpcs
+/docker/scripts/php-cs-fixer-dryrun

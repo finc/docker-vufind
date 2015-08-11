@@ -1,0 +1,3 @@
+#!/bin/bash
+
+su -l dev -c "cd /app;phpcs --standard=PEAR --ignore=*/config/*,*/tests/* --extensions=php module"

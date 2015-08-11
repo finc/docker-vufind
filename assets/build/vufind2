@@ -1,15 +1,26 @@
 #!/bin/bash
 
-pear upgrade pear
-pear channel-discover pear.phing.info
-pear channel-update pear.phing.info
-pear install --onlyreqdeps phing/phing
+# installl CodeSniffer
+pear install pear/PHP_CodeSniffer
+
+# install phpunit
+wget -qO /usr/local/bin/phpunit https://phar.phpunit.de/phpunit.phar
+chmod +x /usr/local/bin/phpunit
+
+# install phing
+wget -qO /usr/local/bin/phing http://www.phing.info/get/phing-latest.phar
+chmod +x /usr/local/bin/phing
+
+# install php-cs-fixer
+wget -qO /usr/local/bin/php-cs-fixer http://get.sensiolabs.org/php-cs-fixer.phar
+chmod +x /usr/local/bin/php-cs-fixer
 
 cat > /etc/supervisor/conf.d/solr.conf <<EOF
 [program:solr]
 priority = 20
 directory = /tmp
-command = /docker/run/solr
+command = /app/vufind.sh run
+environment = VUFIND_HOME="/app"
 user = dev
 autostart = false
 autorestart = true
@@ -17,3 +28,7 @@ stdout_logfile = ${LOG_DIR}/supervisor/%(program_name)s.log
 stderr_logfile = ${LOG_DIR}/supervisor/%(program_name)s.log
 EOF
 
+cat >> /home/dev/.profile <<EOF
+export VUFIND_HOME="/app"
+export VUFIND_LOCAL_DIR="/app/local"
+EOF

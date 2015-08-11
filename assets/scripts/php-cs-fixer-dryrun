@@ -1,0 +1,3 @@
+#!/bin/bash
+
+su -l dev -c "cd /app;phing php-cs-fixer-dryrun"
