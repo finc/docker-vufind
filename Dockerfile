@@ -11,7 +11,7 @@ RUN echo "deb http://http.debian.net/debian wheezy-backports main" >/etc/apt/sou
 
 EXPOSE 80 443 3306 8080
 ENV APP_HOME /usr/local/vufind2
-VOLUME ["/var/lib/mysql", "/var/run/mysqld", ${APP_HOME}, "/var/lib/xdebug"]
+VOLUME ["/var/lib/mysql", "/var/run/mysqld", "${APP_HOME}", "/var/lib/xdebug"]
 
 RUN rm -rf /docker/build
 
