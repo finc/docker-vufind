@@ -3,7 +3,7 @@
 These are the sources of [useltmann/vufind2][1], the docker-image for a easy-to-use DTE. it utilizes [smoebody/dev-dotdeb][2] as base image for lamp DTEs.
 
 feel free to use for your own, i would appreciate contributions as pullrequests.
- 
+
 ## Setup VuFind2
 
 next step is to set up vufind2 via the frontend found here
@@ -18,16 +18,16 @@ The container's MySQL Server is set up with user *root* and no password. when yo
 
 with a running vufind2-container you can either use the interactive console to run phpunit or you can make use of a single docker command script to run phpunit in a dedicated container
 
-    docker run --rm -ti -v /home/me/vufind2:/app useltmann/vufind2 phpunit
+    docker run --rm -ti -v /home/me/vufind2:/usr/local/vufind2 useltmann/vufind2 phpunit
 
-_a new container is initialized and a script is invoked which runs the default phpunit command to test the vufind2 code as the vufind-org ci-server would do. 
+_a new container is initialized and a script is invoked which runs the default phpunit command to test the vufind2 code as the vufind-org ci-server would do.
 the container is removed immediately after phpunit has finished._
 
 ## run codesniffer on sourcecode
 
 the same applies to codesniffer as it does for phpunit. the command to run though is
 
-    docker run --rm -ti -v /home/me/vufind2:/app useltmann/vufind2 phpcs
+    docker run --rm -ti -v /home/me/vufind2:/usr/local/vufind2 useltmann/vufind2 phpcs
 
 ## run an interactive console in the container
 
@@ -74,7 +74,7 @@ lamp:
     - "8080:8080"
     - "3306:3306"
   volumes:
-    - "./:/app"
+    - "./:/usr/local/vufind2"
 ```
 
 after that you can run the following command from within the vufind2 source folder
@@ -84,7 +84,7 @@ after that you can run the following command from within the vufind2 source fold
 _(re)creates the container based on the existing image. if no local image is found, the docker-registry is asked for it and pulled on existence._
 
     docker-compose stop
-    
+
 _stops the container_
 
     docker-compose start
@@ -101,7 +101,7 @@ to run a single command i.e. a script like _phpunit_ or_phpcs_ you can use docke
     docker-compose run --rm lamp phpunit
 
 _the container is removed immediately after the command is finished._
- 
+
 please refer to the website for further explanation.
 
   [1]: https://registry.hub.docker.com/u/useltmann/vufind2/

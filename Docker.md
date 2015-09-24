@@ -34,7 +34,7 @@ First you should clone the vufind2 code somewhere in your development environmen
 
 now you can run the docker image to use this folder as vufind base and wrap the runtime environment around
 
-    docker run --name vufind2-container -d -v /home/me/vufind2:/app -p 127.0.0.1:80:80 -p 127.0.0.1:443:443 -p 127.0.0.1:8080:8080 -p 127.0.0.1:3306:3306 useltmann/vufind2
+    docker run --name vufind2-container -d -v /home/me/vufind2:/usr/local/vufind2 -p 127.0.0.1:80:80 -p 127.0.0.1:443:443 -p 127.0.0.1:8080:8080 -p 127.0.0.1:3306:3306 useltmann/vufind2
 
 this starts the container named _vufind2-container_ and sets up all the components as well as vufind2 itself with its default values. you should now be able to reach the vufind2 frontend at
 

@@ -1,7 +1,6 @@
 #!/bin/bash
 set -e
 
-APP_HOME="/app"
 BUILD_DIR="/docker/build"
 LOG_DIR="/var/log"
 

@@ -1,3 +1,3 @@
 #!/bin/bash
 
-su -l dev -c "cd /app;phpunit --stderr --configuration module/VuFind/tests/phpunit.xml"
+su -l dev -c "cd ${APP_HOME};phpunit --stderr --configuration module/VuFind/tests/phpunit.xml"
