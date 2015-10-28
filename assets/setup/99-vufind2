@@ -17,8 +17,21 @@ sed -e 's/\(^\s*php_value\s\+.*\)/#\1/' -i ${VUFIND_HTTPD_CONF}
 # we change vufinds default path to ${APP_HOME}'s path
 sed -e 's!/usr/local/vufind2!'${APP_HOME}'!g' -i ${VUFIND_HTTPD_CONF}
 
+# if there is no symbolic link for apache2 config create one
 if [ ! -h "${VUFIND_HTTPD_LINK}" ]; then
     ln -s ${VUFIND_HTTPD_CONF} ${VUFIND_HTTPD_LINK}
+fi;
+
+# if there is a package.json, we call npm install to install all required local components
+if [ -e ${APP_HOME}/package.json ]; then
+    echo "Installing locally required npm packages ..."
+    su -l dev -c "cd ${APP_HOME};npm install"
+fi;
+
+# if there is a gruntfile in the sources, we want to start grunt-watch to compile all necessities
+if [ -e ${APP_HOME}/[gG]runtfile.js ]; then
+    echo "Setting up Vufind2 grunt-watcher for autostart ..."
+    sed -e 's/^\(^\s*autostart\s*=\s*\).*$/\1true/' -i /etc/supervisor/conf.d/grunt-watch.conf
 fi;
 
 if [ "${VUFIND_SOLR}" == "local" ]; then
