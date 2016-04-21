@@ -25,7 +25,7 @@ cat > /etc/supervisor/conf.d/solr.conf <<EOF
 [program:solr]
 priority = 20
 directory = /tmp
-command = ${APP_HOME}/vufind.sh run
+command = ${APP_HOME}/solr.sh run
 environment = VUFIND_HOME="${APP_HOME}"
 user = dev
 autostart = false
@@ -52,7 +52,7 @@ export VUFIND_LOCAL_DIR="${APP_HOME}/local"
 EOF
 
 # override apache-config to match vufinds workingdirectory
-cat >/etc/apache2/sites-available/99-app <<EOF
+cat >/etc/apache2/sites-available/99-app.conf <<EOF
 Alias / /${APP_HOME}/
 <IfModule suexec_module>
 	SuexecUserGroup dev dev
