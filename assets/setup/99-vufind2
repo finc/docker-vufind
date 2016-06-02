@@ -4,7 +4,7 @@ set -e
 VUFIND_SOLR="${VUFIND_SOLR:-local}"
 
 VUFIND_HTTPD_CONF="${APP_HOME}/${VUFIND_HTTPD_CONF:-local/httpd-vufind.conf}"
-VUFIND_HTTPD_LINK="/etc/apache2/sites-enabled/00-httpd-vufind2.conf"
+VUFIND_HTTPD_LINK="/etc/apache2/sites-enabled/10-httpd-vufind2.conf"
 
 if [ ! -e "${VUFIND_HTTPD_CONF}" ];then
     su -l dev -c "php ${APP_HOME}/install.php --non-interactive"
