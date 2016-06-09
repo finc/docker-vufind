@@ -5,7 +5,7 @@ MAINTAINER seltmann@ub.uni-leipzig.de
 RUN apt-get update \
  && DEBIAN_FRONTEND=noninteractive apt-get install -y openjdk-7-jdk
 
-RUN echo "deb http://http.debian.net/debian jessie-backports main" >/etc/apt/sources.list.d/jessie-backports.list \
+RUN echo "deb http://http.debian.net/debian wheezy-backports main" >/etc/apt/sources.list.d/wheezy-backports.list \
  && apt-get update \
  && DEBIAN_FRONTEND=noninteractive apt-get install -y nodejs curl
 
@@ -20,6 +20,6 @@ RUN chmod 755 /docker/build/init \
  && /docker/build/init
 
 COPY assets/scripts /docker/scripts
-RUN chmod 755 /docker/scripts/* 
+RUN chmod 755 /docker/scripts/*
 
 COPY assets/setup /docker/setup
