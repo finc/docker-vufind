@@ -45,7 +45,7 @@ if [ "${VUFIND_SOLR}" == "local" ]; then
 
     if [ -e ${APP_HOME}/solr.sh ]; then
       echo "Setting new solr startscript ..."
-      sed -e 's!^\(^\s*command\s*=\s*\).*$!\1${APP_HOME}/solr.sh run!' -i /etc/supervisor/conf.d/solr.conf
+      sed -e 's!^\(^\s*command\s*=\s*\).*$!\1'${APP_HOME}'/solr.sh "start -f"!' -i /etc/supervisor/conf.d/solr.conf
     fi;
 fi;
 
