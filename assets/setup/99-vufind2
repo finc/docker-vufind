@@ -37,6 +37,11 @@ fi;
 if [ "${VUFIND_SOLR}" == "local" ]; then
     echo "Setting up Vufind2 Solr for autostart ..."
     sed -e 's/^\(^\s*autostart\s*=\s*\).*$/\1true/' -i /etc/supervisor/conf.d/solr.conf
+
+    if [ -e ${APP_HOME}/solr.sh ]; then
+      echo "Setting new solr startscript ..."
+      sed -e 's/^\(^\s*command\s*=\s*\).*$/\1${APP_HOME}/solr.sh run/' -i /etc/supervisor/conf.d/solr.conf
+    fi;
 fi;
 
 VUFIND_LOCAL_DIR=`grep -E '^\s*SetEnv\s+VUFIND_LOCAL_DIR' "${VUFIND_HTTPD_LINK}" | perl -pe 's!^\s*SetEnv\s+VUFIND_LOCAL_DIR\s+([^\s]+)\s*$!$1!'`
