@@ -66,15 +66,20 @@ and run a new one by invoking the command as listed on top
 for better control over docker containers most people - including me - use [docker-compose][3] as docker container description in their source folders. i recommend you to do so as well by creating a file called `docker-compose.yml` with the following content
 
 ```
-lamp:
-  image: useltmann/vufind2
-  ports:
-    - "80:80"
-    - "443:443"
-    - "8080:8080"
-    - "3306:3306"
-  volumes:
-    - "./:/usr/local/vufind2"
+version: '2'
+services:
+  lamp:
+    image: docker.io/useltmann/vufind2
+    ports:
+      - 127.0.0.1:80:80
+      - 127.0.0.1:443:443
+      - 127.0.0.1:8080:8080
+      - 127.0.0.1:3306:3306
+    volumes:
+      - ./:/usr/local/vufind2:z
+      - db-data:/var/lib/mysql:z
+volumes:
+  db-data: {}
 ```
 
 after that you can run the following command from within the vufind2 source folder
@@ -100,7 +105,12 @@ to run a single command i.e. a script like _phpunit_ or_phpcs_ you can use docke
 
     docker-compose run --rm lamp phpunit
 
-_the container is removed immediately after the command is finished._
+to run an arbitrary command, even a bash inside a connected container run
+
+    docker-compose run --rm lamp bash
+
+_note that every command issued like that is executed as *dev*-user. also the default VUFIND\_\* environment variables are set for all issued commands. the *--rm* option
+makes the container is removed immediately after the command is finished._
 
 please refer to the website for further explanation.
 

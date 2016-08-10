@@ -1,0 +1,4 @@
+#!/bin/bash
+
+# install CodeSniffer
+pear install pear/PHP_CodeSniffer
