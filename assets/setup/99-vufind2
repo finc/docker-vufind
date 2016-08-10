@@ -1,24 +1,12 @@
 #!/bin/bash
 
 set -e
-VUFIND_SOLR="${VUFIND_SOLR:-local}"
 
-VUFIND_HTTPD_CONF="${APP_HOME}/${VUFIND_HTTPD_CONF:-local/httpd-vufind.conf}"
+VUFIND_HTTPD_CONF="${APP_HOME}/${VUFIND_HTTPD_CONF}"
 VUFIND_HTTPD_LINK="/etc/apache2/sites-enabled/10-httpd-vufind2.conf"
 
-# if there is a package.json, we call npm install to install all required local components
-if [ -e ${APP_HOME}/package.json ]; then
-    echo "Installing locally required npm packages ..."
-    su -l dev -c "cd ${APP_HOME};npm install"
-fi;
-
-if [ -e ${APP_HOME}/composer.json -a ! -d ${APP_HOME}/vendor ];then
-    echo "Installing composer dependencies ..."
-    su -l dev -c "cd ${APP_HOME};composer install"
-fi;
-
 if [ ! -e "${VUFIND_HTTPD_CONF}" ];then
-    su -l dev -c "php ${APP_HOME}/install.php --non-interactive"
+    su -l ${APP_USER} -c "php ${APP_HOME}/install.php --non-interactive"
     test -e "${VUFIND_HTTPD_LINK}" && rm "${VUFIND_HTTPD_LINK}";
 fi;
 
@@ -33,21 +21,12 @@ sed -e 's!/usr/local/vufind2!'${APP_HOME}'!g' -i ${VUFIND_HTTPD_CONF}
 # we have to remove all php_value options since we dont use php as apache2 module
 sed -e 's/\(^\s*php_value\s\+.*\)/#\1/' -i ${VUFIND_HTTPD_CONF}
 
-# if there is a gruntfile in the sources, we want to start grunt-watch to compile all necessities
-if [ -e ${APP_HOME}/[gG]runtfile.js ]; then
-    echo "Setting up Vufind2 grunt-watcher for autostart ..."
-    sed -e 's/^\(^\s*autostart\s*=\s*\).*$/\1true/' -i /etc/supervisor/conf.d/grunt-watch.conf
-fi;
-
-if [ "${VUFIND_SOLR}" == "local" ]; then
-    echo "Setting up Vufind2 Solr for autostart ..."
-    sed -e 's/^\(^\s*autostart\s*=\s*\).*$/\1true/' -i /etc/supervisor/conf.d/solr.conf
-
-    if [ -e ${APP_HOME}/solr.sh ]; then
-      echo "Setting new solr startscript ..."
-      sed -e 's!^\(^\s*command\s*=\s*\).*$!\1'${APP_HOME}'/solr.sh "start -f"!' -i /etc/supervisor/conf.d/solr.conf
-    fi;
-fi;
+if ! grep -q VUFIND_HOME /home/${APP_USER}/.profile; then
+    cat >> /home/${APP_USER}/.profile <<EOF
+export VUFIND_HOME=${APP_HOME}
+export VUFIND_LOCAL_DIR="${APP_HOME}/local"
+EOF
+fi
 
 VUFIND_LOCAL_DIR=`grep -E '^\s*SetEnv\s+VUFIND_LOCAL_DIR' "${VUFIND_HTTPD_LINK}" | perl -pe 's!^\s*SetEnv\s+VUFIND_LOCAL_DIR\s+([^\s]+)\s*$!$1!'`
-sed -e 's!^\(export VUFIND_LOCAL_DIR="\)[^\"]\+"!\1'${VUFIND_LOCAL_DIR}'"!' -i /home/dev/.profile
+sed -e 's!^\(export VUFIND_LOCAL_DIR="\)[^\"]\+"!\1'${VUFIND_LOCAL_DIR}'"!' -i /home/${APP_USER}/.profile

@@ -1,0 +1,18 @@
+#!/bin/bash
+
+set -e
+
+# if there is a gruntfile in the sources, we want to start grunt-watch to compile all necessities
+if [ -e ${APP_HOME}/[gG]runtfile.js ]; then
+	cat > /etc/supervisor/conf.d/grunt-watch.conf <<EOF
+[program:grunt-watch]
+priority = 20
+directory = /usr/local/vufind2
+command = grunt watch
+user = ${APP_USER}
+autostart = true
+autorestart = true
+stdout_logfile = ${LOG_DIR}/supervisor/%(program_name)s.log
+stderr_logfile = ${LOG_DIR}/supervisor/%(program_name)s.log
+EOF
+fi;
