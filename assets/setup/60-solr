@@ -6,7 +6,7 @@ if [ "${VUFIND_SOLR}" == "local" ]; then
 	if [ -e ${APP_HOME}/solr.sh ]; then
 		SOLR_START_SCRIPT=${APP_HOME}'/solr.sh start -f -p 8080'
 	else
-		SOLR_START_SCRIPT=${APP_HOME}/vufind.sh run
+		SOLR_START_SCRIPT=${APP_HOME}'/vufind.sh run'
 	fi;
 
 	cat > /etc/supervisor/conf.d/solr.conf <<EOF
