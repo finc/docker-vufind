@@ -1,5 +1,5 @@
 ### install debian ###
-FROM docker.io/smoebody/dev-dotdeb:php54
+FROM docker.io/useltmann/dev-dotdeb:php54
 MAINTAINER seltmann@ub.uni-leipzig.de
 # install openjdk for solr
 RUN apt-get update \
