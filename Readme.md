@@ -24,10 +24,10 @@ This image goes to all the vufind developers that want a testing environment for
 
 It is out of the box usable on linux hosts with a docker version >= 1.10
 
-The image makes use of [smoebody/dev-dotdeb][3] - which prepares lamp with several development tools like xdebug and webgrind,
+The image makes use of [useltmann/dev-dotdeb][3] - which prepares lamp with several development tools like xdebug and webgrind,
 and wraps around your local clone of vufind2 from [https://github.com/vufind-org/vufind][2]
 
-Please refer to [smoebody/dev-dotdeb][3] on how to use the tools provided.
+Please refer to [useltmann/dev-dotdeb][3] on how to use the tools provided.
 
 ## How to use this image
 
@@ -117,7 +117,7 @@ then you do not need the container's solr to run. in that case you can provide a
 variable `VUFIND_HTTPD_CONF=local/dev/httpd-vufind.conf`. _be aware that the path has to be accessable from within the container and the specified file must exist,
 otherwise starting the container will fail_
 
-_furthermore all environment variables of the underlying image from [smoebody/dev-dotdeb][3] will work as well
+_furthermore all environment variables of the underlying image from [useltmann/dev-dotdeb][3] will work as well
 
 ## docker-compose
 
@@ -172,4 +172,4 @@ makes the container is removed immediately after the command is finished._
 
   [1]: https://vufind-org.github.io/vufind/
   [2]: https://github.com/vufind-org/vufind/
-  [3]: https://hub.docker.com/r/smoebody/dev-dotdeb/
+  [3]: https://hub.docker.com/r/useltmann/dev-dotdeb/
