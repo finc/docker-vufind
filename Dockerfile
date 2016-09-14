@@ -14,12 +14,9 @@ ENV APP_HOME=/usr/local/vufind2 \
  VUFIND_SOLR=local \
  VUFIND_HTTPD_CONF=local/httpd-vufind.conf
 
-RUN rm -rf /docker/build
-
 COPY assets/build /docker/build
-
-RUN chmod 755 /docker/build/init  \
- && /docker/build/init
+RUN /docker/init \
+ && rm -rf /docker/build
 
 COPY assets/scripts /docker/scripts
 COPY assets/setup /docker/setup
