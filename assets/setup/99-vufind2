@@ -21,12 +21,7 @@ sed -e 's!/usr/local/vufind2!'${APP_HOME}'!g' -i ${VUFIND_HTTPD_CONF}
 # we have to remove all php_value options since we dont use php as apache2 module
 sed -e 's/\(^\s*php_value\s\+.*\)/#\1/' -i ${VUFIND_HTTPD_CONF}
 
-if ! grep -q VUFIND_HOME /home/${APP_USER}/.profile; then
-    cat >> /home/${APP_USER}/.profile <<EOF
-export VUFIND_HOME=${APP_HOME}
-export VUFIND_LOCAL_DIR="${APP_HOME}/local"
-EOF
-fi
-
 VUFIND_LOCAL_DIR=`grep -E '^\s*SetEnv\s+VUFIND_LOCAL_DIR' "${VUFIND_HTTPD_LINK}" | perl -pe 's!^\s*SetEnv\s+VUFIND_LOCAL_DIR\s+([^\s]+)\s*$!$1!'`
-sed -e 's!^\(export VUFIND_LOCAL_DIR="\)[^\"]\+"!\1'${VUFIND_LOCAL_DIR}'"!' -i /home/${APP_USER}/.profile
+
+export VUFIND_LOCAL_DIR
+export VUFIND_HOME=${APP_HOME}
