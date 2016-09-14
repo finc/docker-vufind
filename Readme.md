@@ -1,5 +1,7 @@
 # docker-vufind2
 
+[![](https://images.microbadger.com/badges/image/ubleipzig/vufind2.svg)](https://microbadger.com/images/ubleipzig/vufind2 "Get your own image badge on microbadger.com")
+
 ## What is Vufind?
 
 from [https://vufind-org.github.io/vufind/][1]
