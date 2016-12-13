@@ -2,4 +2,4 @@
 #
 set -e
 
-sed -e "s/^\(short_open_tag\)\s*=.*\$/\1 = On/" -i /etc/php5/cgi/php.ini
+sed -e "s/^\(short_open_tag\)\s*=.*\$/\1 = On/" -i /etc/php5/fpm/php.ini
