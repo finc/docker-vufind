@@ -1,6 +1,4 @@
 #!/bin/bash
 
 # install grunt
-update-alternatives --install /usr/bin/node nodejs /usr/bin/nodejs 100
-wget -qO - https://www.npmjs.com/install.sh | sh
 npm install -g grunt-cli
