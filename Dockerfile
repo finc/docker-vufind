@@ -1,5 +1,5 @@
 ### install debian ###
-FROM docker.io/useltmann/dev-dotdeb:latest
+FROM docker.io/useltmann/dev-dotdeb:php_7.0-2
 MAINTAINER seltmann@ub.uni-leipzig.de
 # install openjdk for solr, nodejs for grunt
 RUN wget -qO- https://deb.nodesource.com/setup_7.x | bash - \
