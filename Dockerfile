@@ -2,8 +2,7 @@
 FROM docker.io/useltmann/dev-dotdeb:latest
 MAINTAINER seltmann@ub.uni-leipzig.de
 # install openjdk for solr, nodejs for grunt
-RUN echo "deb http://http.debian.net/debian jessie-backports main" >/etc/apt/sources.list.d/jessie-backports.list \
- && apt-get update \
+RUN wget -qO- https://deb.nodesource.com/setup_7.x | bash - \
  && DEBIAN_FRONTEND=noninteractive apt-get install -y nodejs curl openjdk-7-jdk \
  && rm -rf /var/lib/apt/lists/* \
  && rm -rf /var/cache/apt/archives/*
