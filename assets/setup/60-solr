@@ -4,7 +4,7 @@ set -e
 
 if [ "${VUFIND_SOLR}" == "local" ]; then
 	if [ -e ${APP_HOME}/solr.sh ]; then
-		SOLR_START_SCRIPT=${APP_HOME}'/solr.sh start -f -p 8080'
+		SOLR_START_SCRIPT=${APP_HOME}'/solr.sh start'
 	else
 		SOLR_START_SCRIPT=${APP_HOME}'/vufind.sh run'
 	fi;
@@ -14,7 +14,7 @@ if [ "${VUFIND_SOLR}" == "local" ]; then
 priority = 20
 directory = /tmp
 command = ${SOLR_START_SCRIPT}
-environment = VUFIND_HOME="${APP_HOME}"
+environment = VUFIND_HOME="${APP_HOME}",SOLR_ADDITIONAL_START_OPTIONS=-f
 user = ${APP_USER}
 autostart = true
 autorestart = true
