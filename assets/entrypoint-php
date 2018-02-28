@@ -1,0 +1,9 @@
+#!/bin/sh
+set -e
+
+cp ${VUFIND_APPLICATION_PATH}/module/VuFind/sql/mysql.sql /init-db/mysql/
+cp ${VUFIND_APPLICATION_PATH}/module/VuFind/sql/pgsql.sql /init-db/psql/
+
+chown www-data:www-data ${VUFIND_APPLICATION_PATH} ${VUFIND_CACHE_DIR} -R
+
+exec docker-php-entrypoint "$@"

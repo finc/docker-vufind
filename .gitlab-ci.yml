@@ -1,0 +1,55 @@
+stages:
+  - image
+
+httpd_image:
+    stage: image
+    only:
+    - master
+    image: docker:latest
+    services:
+    - docker:dind
+    script:
+    - docker login --username ${DOCKER_USER} --password ${DOCKER_PASSWORD} https://services.ub.uni-leipzig.de:10443/
+    - docker build --no-cache --pull -t services.ub.uni-leipzig.de:11443/bdd_dev/vufind/httpd:latest -f dockerfiles/Dockerfile.httpd .
+    - docker tag services.ub.uni-leipzig.de:11443/bdd_dev/vufind/httpd:latest services.ub.uni-leipzig.de:11443/bdd_dev/vufind/httpd:${CI_PIPELINE_ID}
+    - docker login --username ${DOCKER_USER} --password ${DOCKER_PASSWORD} https://services.ub.uni-leipzig.de:11443/
+    - docker push services.ub.uni-leipzig.de:11443/bdd_dev/vufind/httpd:${CI_PIPELINE_ID}
+    - docker push services.ub.uni-leipzig.de:11443/bdd_dev/vufind/httpd:latest
+    tags:
+    - docker
+
+  nginx_image:
+    stage: image
+    only:
+    - ng
+    - master
+    image: docker:latest
+    services:
+    - docker:dind
+    script:
+    - docker login --username ${DOCKER_USER} --password ${DOCKER_PASSWORD} https://services.ub.uni-leipzig.de:10443/
+    - docker build --no-cache --pull -t services.ub.uni-leipzig.de:11443/bdd_dev/vufind/nginx:latest -f dockerfiles/Dockerfile.nginx .
+    - docker tag services.ub.uni-leipzig.de:11443/bdd_dev/vufind/nginx:latest services.ub.uni-leipzig.de:11443/bdd_dev/vufind/nginx:${CI_PIPELINE_ID}
+    - docker login --username ${DOCKER_USER} --password ${DOCKER_PASSWORD} https://services.ub.uni-leipzig.de:11443/
+    - docker push services.ub.uni-leipzig.de:11443/bdd_dev/vufind/nginx:${CI_PIPELINE_ID}
+    - docker push services.ub.uni-leipzig.de:11443/bdd_dev/vufind/nginx:latest
+    tags:
+    - docker
+
+  php_image:
+    stage: image
+    only:
+    - ng
+    - master
+    image: docker:latest
+    services:
+    - docker:dind
+    script:
+    - docker login --username ${DOCKER_USER} --password ${DOCKER_PASSWORD} https://services.ub.uni-leipzig.de:10443/
+    - for tag in 5{,-debug} 7{,-debug}; do docker build --no-cache --pull -t services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:${tag} -f dockerfiles/Dockerfile.php:${tag} .; docker tag services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:${tag} services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:${tag}-${CI_PIPELINE_ID}; done
+    - docker login --username ${DOCKER_USER} --password ${DOCKER_PASSWORD} https://services.ub.uni-leipzig.de:11443/
+    - for tag in 5{,-debug} 7{,-debug}; do docker push services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:${tag}; docker push services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:${tag}-${CI_PIPELINE_ID}; done
+    - docker tag services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:7 services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:latest
+    - docker push services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:latest
+    tags:
+    - docker

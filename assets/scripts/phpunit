@@ -1,3 +1,0 @@
-#!/bin/bash
-
-phpunit --stderr --configuration module/VuFind/tests/phpunit.xml

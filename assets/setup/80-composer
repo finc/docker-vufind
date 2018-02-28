@@ -1,9 +1,0 @@
-#!/bin/bash
-
-set -e
-
-if [ -e ${APP_HOME}/composer.json -a ! -d ${APP_HOME}/vendor ];then
-    echo "Installing composer dependencies ..."
-    su -l ${APP_USER} -c "cd ${APP_HOME};composer install"
-fi;
-

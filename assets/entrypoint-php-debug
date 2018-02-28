@@ -1,0 +1,29 @@
+#!/bin/sh
+set -e
+
+cp ${VUFIND_APPLICATION_PATH}/module/VuFind/sql/mysql.sql /init-db/mysql/
+cp ${VUFIND_APPLICATION_PATH}/module/VuFind/sql/pgsql.sql /init-db/psql/
+
+APP_UID=`stat -c %u ${VUFIND_APPLICATION_PATH}`
+APP_GID=`stat -c %g ${VUFIND_APPLICATION_PATH}`
+APP_USER_HOME=`grep -e '^www-data' /etc/passwd | awk -F":" '{ print $6; }'`
+
+# we do not allow root to be the app user
+if [ "$APP_UID" == "0" -o "$APP_GID" == "0" ]; then
+	echo "Setting app user to UID:1000 and GID:1000 ..."
+	APP_UID="1000"
+	APP_GID="1000"
+	chown ${APP_UID}:${APP_GID} ${VUFIND_APPLICATION_PATH} -R
+fi;
+
+sed -e "s!^\(www-data:x\):[0-9]\+:[0-9]\+:\(.*\)\$!\1:${APP_UID}:${APP_GID}:\2!" -i /etc/passwd
+sed -e "s!^\(www-data:x\):[0-9]\+:\(.*\)\$!\1:${APP_GID}:\2!" -i /etc/group
+
+chown www-data:www-data ${APP_USER_HOME} ${VUFIND_CACHE_DIR} -R
+
+# first arg is `-f` or `--some-option`
+if [ "${1#-}" != "$1" ]; then
+	set -- php-fpm "$@"
+fi
+
+exec "$@"

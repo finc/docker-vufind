@@ -1,0 +1,3 @@
+FROM solr:5-alpine
+
+COPY assets/init-cores /docker-entrypoint-initdb.d/init-cores.sh

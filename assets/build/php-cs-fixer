@@ -1,5 +1,0 @@
-#!/bin/bash
-
-# install php-cs-fixer
-wget -qO /usr/local/bin/php-cs-fixer http://get.sensiolabs.org/php-cs-fixer.phar
-chmod +x /usr/local/bin/php-cs-fixer

@@ -1,0 +1,25 @@
+FROM php:5-fpm
+VOLUME [ "/var/vache/vufind" ]
+ENTRYPOINT [ "/docker-entrypoint" ]
+
+ENV VUFIND_CACHE_DIR=/var/cache/vufind \
+  VUFIND_APPLICATION_PATH=/usr/local/vufind \
+  VUFIND_LOCAL_DIR=/usr/local/vufind/local \
+  VUFIND_ENV=production
+
+COPY assets/entrypoint-php /docker-entrypoint
+
+RUN mkdir -p /init-db/mysql /init-db/psql \
+  && apt-get update \
+  && apt-get install -y  libicu52 libicu-dev libfreetype6-dev libjpeg62-turbo-dev libmcrypt-dev libpng-dev libxslt-dev libpq-dev \
+  && docker-php-ext-configure gd --with-freetype-dir=/usr/include --with-jpeg-dir=/usr/include \
+  && docker-php-ext-install -j$(nproc) intl mysqli pdo_pgsql pdo_mysql pdo gd xsl mcrypt \
+  && apt-get remove --purge -y libicu-dev libfreetype6-dev libjpeg62-turbo-dev libmcrypt-dev libpng-dev libxslt-dev libpq-dev \
+  && chmod a+x /docker-entrypoint
+
+RUN curl -qL http://downloads.sourceforge.net/vufind/vufind-4.1.2.tar.gz?use_mirror=osdn >/tmp/vufind-4.1.2.tar.gz \
+ && tar -C /tmp -xzvf /tmp/vufind-4.1.2.tar.gz \
+ && mv /tmp/vufind-4.1.2 /usr/local/vufind \
+ && rm -rf /tmp/*
+
+CMD [ "php-fpm" ]

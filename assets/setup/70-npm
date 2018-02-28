@@ -1,9 +1,0 @@
-#!/bin/bash
-
-set -e
-
-# if there is a package.json, we call npm install to install all required local components
-if [ -e ${APP_HOME}/package.json ]; then
-    echo "Installing locally required npm packages ..."
-    su -l ${APP_USER} -c "cd ${APP_HOME};npm install"
-fi;

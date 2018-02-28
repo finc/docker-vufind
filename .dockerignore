@@ -1,4 +1,3 @@
-.gitignore
-LICENSE
-Readme.md
-Docker.md
+*
+!assets
+!dockerfiles

@@ -1,3 +1,0 @@
-#!/bin/bash
-
-phpcs -p --standard=PEAR --ignore=*/config/*,*/tests/* --extensions=php module

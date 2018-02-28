@@ -1,5 +1,0 @@
-#!/bin/bash
-#
-set -e
-
-sed -e "s/^\(short_open_tag\)\s*=.*\$/\1 = On/" -i /etc/php/7.0/fpm/php.ini

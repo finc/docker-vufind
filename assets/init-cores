@@ -1,0 +1,12 @@
+#!/bin/sh
+set -e
+
+solr_path=/opt/solr/server/solr
+vufind_path=/usr/local/vufind/solr/vufind
+
+cp ${vufind_path}/solr.xml ${solr_path}/solr.xml
+cp -r ${vufind_path}/{authority,biblio,reserves,website} ${solr_path}/mycores/
+cp -r ${vufind_path}/jars ${solr_path}/
+
+find ${solr_path}/mycores/ -name solrconfig.xml -exec sed -e 's!../../vendor/contrib/!/opt/solr/contrib/!' -i {} \;
+find ${solr_path}/mycores/ -name solrconfig.xml -exec sed -e 's!../jars!'${solr_path}'/jars!' -i {} \;

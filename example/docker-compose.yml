@@ -1,0 +1,93 @@
+version: '2'
+services:
+  php:
+    build:
+      dockerfile: ../dockerfiles/Dockerfile.php:5-fpm
+      context: .
+    volumes:
+      - vufind:/usr/local/vufind
+      - cache:/var/cache/vufind
+    environment:
+      VUFIND_LOCAL_DIR: /usr/local/vufind/local/production
+  httpd:
+    image: services.ub.uni-leipzig.de:11443/bdd_dev/vufind/httpd:latest
+    ports:
+      - 81:80
+    volumes:
+      - vufind:/usr/local/vufind:ro
+      - cache:/var/cache/vufind:ro
+    depends_on:
+      - php
+
+  nginx:
+    image: services.ub.uni-leipzig.de:11443/bdd_dev/vufind/nginx:latest
+    ports:
+      - 80:80
+    volumes:
+      - vufind:/usr/local/vufind:ro
+      - cache:/var/cache/vufind:ro
+    depends_on:
+      - php
+
+  # not ready yet
+  # solr:
+  #   build:
+  #     dockerfile: ./dockerfiles/Dockerfile.solr
+  #     context: .
+  #   ports:
+  #     - 8983:8983
+  #   volumes:
+  #     - vufind:/usr/local/vufind:ro
+  #     - solr:/opt/solr/server/solr/mycores
+  #   depends_on:
+  #     - php
+
+  ## choose one. either mariadb or postgresql
+  mariadb:
+    image: mariadb:10
+    volumes:
+      - mariadb:/var/lib/mysql:z
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: "true"
+      MYSQL_DATABASE: vufind
+      MYSQL_USER: vufind
+      MYSQL_PASSWORD: vufindpw
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    depends_on:
+      - php
+
+  postgresdb:
+    image: postgres:9
+    volumes:
+      - postgres:/var/lib/postgresql/data/pgdata:z
+    environment:
+      PGDATA: /var/lib/postgresql/data/pgdata
+      POSTGRES_DB: vufind
+      POSTGRES_USER: vufind
+      POSTGRES_PASSWORD: vufindpw
+    depends_on:
+      - php
+
+  autoconfig:
+    image: services.ub.uni-leipzig.de:10443/bdd_dev/autoconfig
+    volumes:
+      - vufind:/usr/local/vufind
+    environment:
+      VUFIND_SITE: local
+      VUFIND_INSTANCE: production
+      VUFIND_SKIP_DB: "true"
+      VUFIND_SKIP_GRUNT: "true"
+      VUFIND_SKIP_COMPOSER: "true"
+      VF_config_ini__Database__database: mysql://vufind:vufindpw@mariadb/vufind
+      VF_config_ini__Index__url: http://solr:8983
+    command: vufind deploy
+
+volumes:
+  vufind: {}
+  cache: {}
+  solr: {}
+  mariadb: {}
+  postgres: {}
+  node-modules: {}
