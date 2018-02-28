@@ -5,6 +5,7 @@ stages:
 httpd_image:
   stage: image
   only:
+  - ng
   - master
   image: docker:latest
   services:
