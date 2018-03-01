@@ -15,6 +15,7 @@ RUN apt-get update \
   && docker-php-ext-install -j$(nproc) intl mysqli pdo_pgsql pdo_mysql pdo gd xsl \
   && pecl install mcrypt-1.0.1 \
   && docker-php-ext-enable mcrypt \
-  && apt-get remove --purge -y libicu-dev libfreetype6-dev libjpeg62-turbo-dev libmcrypt-dev libpng-dev libxslt-dev libpq-dev
+  && apt-get remove --purge -y libicu-dev libfreetype6-dev libjpeg62-turbo-dev libmcrypt-dev libpng-dev libxslt-dev libpq-dev \
+  && chmod a+x /docker-entrypoint
 
 CMD [ "php-fpm" ]
