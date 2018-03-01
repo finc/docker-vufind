@@ -1,4 +1,4 @@
-FROM vufind-php:7-fpm
+FROM vufind-php:7
 
 COPY assets/entrypoint-php-debug /docker-entrypoint
 

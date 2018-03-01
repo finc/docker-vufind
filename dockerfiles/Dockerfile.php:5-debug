@@ -1,4 +1,4 @@
-FROM vufind-php:5-fpm
+FROM vufind-php:5
 ENV VUFIND_ENV=development
 COPY assets/entrypoint-php-debug /docker-entrypoint
 

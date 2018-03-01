@@ -17,9 +17,4 @@ RUN mkdir -p /init-db/mysql /init-db/psql \
   && apt-get remove --purge -y libicu-dev libfreetype6-dev libjpeg62-turbo-dev libmcrypt-dev libpng-dev libxslt-dev libpq-dev \
   && chmod a+x /docker-entrypoint
 
-RUN curl -qL http://downloads.sourceforge.net/vufind/vufind-4.1.2.tar.gz?use_mirror=osdn >/tmp/vufind-4.1.2.tar.gz \
- && tar -C /tmp -xzvf /tmp/vufind-4.1.2.tar.gz \
- && mv /tmp/vufind-4.1.2 /usr/local/vufind \
- && rm -rf /tmp/*
-
 CMD [ "php-fpm" ]

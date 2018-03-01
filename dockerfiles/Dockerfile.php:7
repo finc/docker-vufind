@@ -20,9 +20,4 @@ ENV VUFIND_CACHE_DIR=/var/cache/vufind \
   VUFIND_LOCAL_DIR=/usr/local/vufind/local \
   VUFIND_ENV=production
 
-RUN curl -qL http://downloads.sourceforge.net/vufind/vufind-4.1.2.tar.gz?use_mirror=osdn >/tmp/vufind-4.1.2.tar.gz \
- && tar -C /tmp -xzvf /tmp/vufind-4.1.2.tar.gz \
- && mv /tmp/vufind-4.1.2 /usr/local/vufind \
- && rm -rf /tmp/*
-
 CMD ["php-fpm"]

@@ -2,7 +2,7 @@ version: '2'
 services:
   php:
     build:
-      dockerfile: ../dockerfiles/Dockerfile.php:5-fpm
+      dockerfile: ../dockerfiles/Dockerfile.php:5
       context: .
     volumes:
       - vufind:/usr/local/vufind

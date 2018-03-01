@@ -1,8 +1,10 @@
 #!/bin/sh
 set -e
 
-cp ${VUFIND_APPLICATION_PATH}/module/VuFind/sql/mysql.sql /init-db/mysql/
-cp ${VUFIND_APPLICATION_PATH}/module/VuFind/sql/pgsql.sql /init-db/psql/
+if [ ! -d "${VUFIND_APPLICATION_PATH}" ];then
+	echo "the application folder \"${VUFIND_APPLICATION_PATH}\" was not found. make shure to attach a sufficiently set up vufind container"
+	exit 1;
+fi;
 
 APP_UID=`stat -c %u ${VUFIND_APPLICATION_PATH}`
 APP_GID=`stat -c %g ${VUFIND_APPLICATION_PATH}`
