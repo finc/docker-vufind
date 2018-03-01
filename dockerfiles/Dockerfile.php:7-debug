@@ -1,8 +1,7 @@
-FROM vufind-php:7
+FROM services.ub.uni-leipzig.de:10443/bdd_dev/vufind/php:7
+ENV VUFIND_ENV=development
 
 COPY assets/entrypoint-php-debug /docker-entrypoint
-
-ENV VUFIND_ENV=development
 
 RUN pecl install xdebug \
   && docker-php-ext-enable xdebug \
