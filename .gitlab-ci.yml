@@ -48,10 +48,10 @@ php_image:
   - docker:dind
   script:
   - docker login --username ${DOCKER_USER} --password ${DOCKER_PASSWORD} https://services.ub.uni-leipzig.de:10443/
+  - docker login --username ${DOCKER_USER} --password ${DOCKER_PASSWORD} https://services.ub.uni-leipzig.de:11443/
   - for tag in 5 5-debug 7 7-debug; do docker build --no-cache --pull -t services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:${tag} -f dockerfiles/Dockerfile.php:${tag} .; done
   - for tag in 5 5-debug 7 7-debug; do docker tag services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:${tag} services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:${tag}-${CI_PIPELINE_ID}; done
   - docker tag vufind-php:7 services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:latest
-  - docker login --username ${DOCKER_USER} --password ${DOCKER_PASSWORD} https://services.ub.uni-leipzig.de:11443/
   - for tag in 5 5-debug 7 7-debug; do docker push services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:${tag}; docker push services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:${tag}-${CI_PIPELINE_ID}; done
   - docker push services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:latest
   tags:
