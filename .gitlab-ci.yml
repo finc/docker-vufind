@@ -56,3 +56,21 @@ php_image:
   - docker push services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:latest
   tags:
   - docker
+
+node_image:
+  stage: image
+  only:
+  - ng
+  - master
+  image: docker:latest
+  services:
+  - docker:dind
+  script:
+  - docker login --username ${DOCKER_USER} --password ${DOCKER_PASSWORD} https://services.ub.uni-leipzig.de:10443/
+  - docker build --pull -t services.ub.uni-leipzig.de:11443/bdd_dev/vufind/node:8-debug -f dockerfiles/Dockerfile.node:8-debug .
+  - docker tag services.ub.uni-leipzig.de:11443/bdd_dev/vufind/node:8-debug services.ub.uni-leipzig.de:11443/bdd_dev/vufind/node:${CI_PIPELINE_ID}
+  - docker login --username ${DOCKER_USER} --password ${DOCKER_PASSWORD} https://services.ub.uni-leipzig.de:11443/
+  - docker push services.ub.uni-leipzig.de:11443/bdd_dev/vufind/node:${CI_PIPELINE_ID}
+  - docker push services.ub.uni-leipzig.de:11443/bdd_dev/vufind/node:8-debug
+  tags:
+  - docker
