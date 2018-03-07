@@ -14,4 +14,4 @@ RUN apk add --no-cache python make g++ nodejs nodejs-npm \
  && pear install phing/phing \
  && chmod a+x /docker-entrypoint
 
-WORKDIR ${VUFIND_HOME}qqq
+WORKDIR ${VUFIND_HOME}
