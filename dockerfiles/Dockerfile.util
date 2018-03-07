@@ -1,0 +1,17 @@
+FROM services.ub.uni-leipzig.de:10443/composer:latest
+ENTRYPOINT [ "/docker-entrypoint" ]
+
+ENV VUFIND_HOME=/usr/local/vufind \
+ NODE_ENV=production \
+ npm_config_registry=https://services.ub.uni-leipzig.de/nexus/repository/npm/
+
+COPY assets/entrypoint-util /docker-entrypoint
+
+RUN apk add --no-cache python make g++ nodejs nodejs-npm \
+ && npm install -g autoconfig eslint@"<3.0.0" \
+ && pear install pear/Http_Request2 \
+ && pear channel-discover pear.phing.info \
+ && pear install phing/phing \
+ && chmod a+x /docker-entrypoint
+
+WORKDIR ${VUFIND_HOME}qqq

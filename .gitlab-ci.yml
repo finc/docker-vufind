@@ -67,10 +67,10 @@ node_image:
   - docker:dind
   script:
   - docker login --username ${DOCKER_USER} --password ${DOCKER_PASSWORD} https://services.ub.uni-leipzig.de:10443/
-  - docker build --pull -t services.ub.uni-leipzig.de:11443/bdd_dev/vufind/node:8-debug -f dockerfiles/Dockerfile.node:8-debug .
-  - docker tag services.ub.uni-leipzig.de:11443/bdd_dev/vufind/node:8-debug services.ub.uni-leipzig.de:11443/bdd_dev/vufind/node:${CI_PIPELINE_ID}
+  - docker build --pull -t services.ub.uni-leipzig.de:11443/bdd_dev/vufind/util:latest -f dockerfiles/Dockerfile.util:latest .
+  - docker tag services.ub.uni-leipzig.de:11443/bdd_dev/vufind/util:latest services.ub.uni-leipzig.de:11443/bdd_dev/vufind/util:${CI_PIPELINE_ID}
   - docker login --username ${DOCKER_USER} --password ${DOCKER_PASSWORD} https://services.ub.uni-leipzig.de:11443/
-  - docker push services.ub.uni-leipzig.de:11443/bdd_dev/vufind/node:${CI_PIPELINE_ID}
-  - docker push services.ub.uni-leipzig.de:11443/bdd_dev/vufind/node:8-debug
+  - docker push services.ub.uni-leipzig.de:11443/bdd_dev/vufind/util:${CI_PIPELINE_ID}
+  - docker push services.ub.uni-leipzig.de:11443/bdd_dev/vufind/util:latest
   tags:
   - docker

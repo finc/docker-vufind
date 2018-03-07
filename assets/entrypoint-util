@@ -1,0 +1,26 @@
+#!/bin/sh
+set -e
+
+if [ ! -d "${VUFIND_HOME}" ];then
+	echo "the application folder \"${VUFIND_HOME}\" was not found. make shure to attach a sufficiently set up vufind container"
+	exit 1;
+fi;
+
+APP_UID=`stat -c %u ${VUFIND_HOME}`
+APP_GID=`stat -c %g ${VUFIND_HOME}`
+APP_USER_HOME=`grep -e '^www-data' /etc/passwd | awk -F":" '{ print $6; }'`
+
+# we do not allow root to be the app user
+if [ "$APP_UID" == "0" -o "$APP_GID" == "0" ]; then
+	echo "Setting app user to UID:1000 and GID:1000 ..."
+	APP_UID="1000"
+	APP_GID="1000"
+	chown ${APP_UID}:${APP_GID} ${VUFIND_HOME} -R
+fi;
+
+sed -e "s!^\(www-data:x\):[0-9]\+:[0-9]\+:\(.*\)\$!\1:${APP_UID}:${APP_GID}:\2!" -i /etc/passwd
+sed -e "s!^\(www-data:x\):[0-9]\+:\(.*\)\$!\1:${APP_GID}:\2!" -i /etc/group
+
+chown www-data:www-data ${APP_USER_HOME} ${VUFIND_CACHE_DIR} -R
+
+exec su -s /bin/sh www-data -c "$*"
