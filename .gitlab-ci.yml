@@ -57,7 +57,7 @@ php_image:
   tags:
   - docker
 
-node_image:
+util_image:
   stage: image
   only:
   - ng
