@@ -20,7 +20,7 @@ RUN cd /tmp \
  && cd node_modules/node-sass \
  && node scripts/build -f -j 8 \
  && cp /tmp/node_modules/node-sass/vendor/linux-x64-48/binding.node /root/.npm/node-sass/3.13.1/linux-x64-48_binding.node \
- && mv ~/.npm ~www-data/.npm \
+ && cp -a ~/.npm ~www-data/.npm \
  && chown www-data:www-data ~www-data/.npm -R \
  && cd / && rm -rf /tmp/*
 
