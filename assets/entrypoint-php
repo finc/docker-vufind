@@ -6,6 +6,8 @@ if [ ! -d "${VUFIND_APPLICATION_PATH}" ];then
 	exit 1;
 fi;
 
+mkdir -p ${VUFIND_CACHE_DIR}
+
 chown www-data:www-data ${VUFIND_APPLICATION_PATH} ${VUFIND_CACHE_DIR} -R
 
 exec docker-php-entrypoint "$@"

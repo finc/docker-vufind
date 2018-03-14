@@ -42,7 +42,8 @@ services:
   #   depends_on:
   #     - php
 
-  ## choose one. either mariadb or postgresql
+  ## choose one. either mariadb or postgresql. Automatic setup via autoconfig is only available
+  ## for mariadb/mysql
   mariadb:
     image: mariadb:10
     volumes:

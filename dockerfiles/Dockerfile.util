@@ -1,4 +1,4 @@
-FROM services.ub.uni-leipzig.de:10443/composer:latest
+FROM composer:latest
 ENTRYPOINT [ "/docker-entrypoint" ]
 
 ENV VUFIND_HOME=/usr/local/vufind \

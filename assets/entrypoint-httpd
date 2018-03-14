@@ -1,0 +1,9 @@
+#!/bin/bash
+set -e
+
+sed -e 's!AliasMatch \^\(/themes\|/cache\)!AliasMatch \^'${BASE_PATH}'\1!' -i /usr/local/apache2/conf/httpd.conf
+sed -e 's!Alias / !Alias '${BASE_PATH}'/ !' -i /usr/local/apache2/conf/httpd.conf
+sed -e 's!Location />!Location '${BASE_PATH}'/>!' -i /usr/local/apache2/conf/httpd.conf
+sed -e 's!RewriteBase /!RewriteBase '${BASE_PATH}'/!' -i /usr/local/apache2/conf/httpd.conf
+
+exec "$@"

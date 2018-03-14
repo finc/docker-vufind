@@ -21,6 +21,8 @@ fi;
 sed -e "s!^\(www-data:x\):[0-9]\+:[0-9]\+:\(.*\)\$!\1:${APP_UID}:${APP_GID}:\2!" -i /etc/passwd
 sed -e "s!^\(www-data:x\):[0-9]\+:\(.*\)\$!\1:${APP_GID}:\2!" -i /etc/group
 
+mkdir -p ${VUFIND_CACHE_DIR}
+
 chown www-data:www-data ${APP_USER_HOME} ${VUFIND_CACHE_DIR} -R
 
 # first arg is `-f` or `--some-option`
