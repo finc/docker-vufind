@@ -23,11 +23,11 @@ sed -e "s!^\(www-data:x\):[0-9]\+:\(.*\)\$!\1:${APP_GID}:\2!" -i /etc/group
 
 mkdir -p ${VUFIND_CACHE_DIR}
 
-chown www-data:www-data ${APP_USER_HOME} ${VUFIND_CACHE_DIR} -R
+chown www-data:www-data ${VUFIND_APPLICATION_PATH} ${VUFIND_CACHE_DIR} -R
 
 # first arg is `-f` or `--some-option`
-if [ "${1#-}" != "$1" ]; then
-	set -- php-fpm "$@"
+if [ "${1#-}" != "$1" -o "$1" == "php-fpm" ]; then
+	exec docker-php-entrypoint "$@"
+else
+	exec su -s /bin/bash www-data -c "docker-php-entrypoint $@"
 fi
-
-exec "$@"

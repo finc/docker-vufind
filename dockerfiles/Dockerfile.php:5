@@ -4,15 +4,28 @@ ENTRYPOINT [ "/docker-entrypoint" ]
 ENV VUFIND_CACHE_DIR=/var/cache/vufind \
   VUFIND_APPLICATION_PATH=/usr/local/vufind \
   VUFIND_LOCAL_DIR=/usr/local/vufind/local \
-  VUFIND_ENV=production
+  VUFIND_ENV=production \
+  NODE_ENV=production \
+  npm_config_registry=https://services.ub.uni-leipzig.de/nexus/repository/npm/
 
 COPY assets/entrypoint-php /docker-entrypoint
 
-RUN apt-get update \
-  && apt-get install -y  libicu52 libicu-dev libfreetype6-dev libjpeg62-turbo-dev libmcrypt-dev libpng-dev libxslt-dev libpq-dev \
+RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - \
+  && apt-get install -y  libicu52 libicu-dev libfreetype6-dev libjpeg62-turbo-dev libmcrypt-dev libpng-dev libxslt-dev libpq-dev nodejs \
   && docker-php-ext-configure gd --with-freetype-dir=/usr/include --with-jpeg-dir=/usr/include \
   && docker-php-ext-install -j$(nproc) intl mysqli pdo_pgsql pdo_mysql pdo gd xsl mcrypt intl soap \
   && apt-get remove --purge -y libicu-dev libfreetype6-dev libjpeg62-turbo-dev libmcrypt-dev libpng-dev libxslt-dev libpq-dev \
+  && npm install -g autoconfig eslint@"<3.0.0" \
+  && cd /tmp \
+  && npm install -j$(nproc) grunt-sass@"^1.0.0" \
+  && rm /tmp/* -rf \
+  && cp -a ~/.npm ~www-data/.npm \
+  && chown www-data:www-data ~www-data/.npm -R \
+  && pear install pear/Http_Request2 \
+  && pear channel-discover pear.phing.info \
+  && pear install phing/phing \
   && chmod a+x /docker-entrypoint
+
+WORKDIR ${VUFIND_APPLICATION_PATH}
 
 CMD [ "php-fpm" ]
