@@ -13,15 +13,10 @@ COPY assets/entrypoint-php /docker-entrypoint
 RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - \
   && apt-get install -y  libicu52 libicu-dev libfreetype6-dev libjpeg62-turbo-dev libmcrypt-dev libpng-dev libxslt-dev libpq-dev nodejs git \
   && docker-php-ext-configure gd --with-freetype-dir=/usr/include --with-jpeg-dir=/usr/include \
-  && docker-php-ext-install -j$(nproc) intl mysqli pdo_pgsql pdo_mysql pdo gd xsl mcrypt intl soap \
+  && docker-php-ext-install -j$(nproc) intl mysqli pdo_pgsql pdo_mysql pdo gd xsl mcrypt intl soap zip unzip \
   && apt-get remove --purge -y libicu-dev libfreetype6-dev libjpeg62-turbo-dev libmcrypt-dev libpng-dev libxslt-dev libpq-dev \
   && npm install -g autoconfig eslint@"<3.0.0" \
-  && cd /tmp \
-  && npm install -j$(nproc) grunt-sass@"^1.0.0" \
-  && cp /tmp/node_modules/node-sass/vendor/linux-x64-57/binding.node /root/.npm/node-sass/3.13.1/linux-x64-48_binding.node \
-  && rm /tmp/* /var/lib/apt/lists/* -rf \
-  && cp -a ~/.npm ~www-data/.npm \
-  && chown www-data:www-data ~www-data/.npm -R \
+  && rm /var/lib/apt/lists/* -rf \
   && pear install pear/Http_Request2 \
   && pear channel-discover pear.phing.info \
   && pear install phing/phing \
