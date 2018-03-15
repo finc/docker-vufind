@@ -13,7 +13,7 @@ COPY assets/entrypoint-php /docker-entrypoint
 RUN apt-get update \
   && apt-get install -y gnupg \
   && curl -sL https://deb.nodesource.com/setup_8.x | bash - \
-  && apt-get install -y  libicu57 libicu-dev libfreetype6-dev libjpeg62-turbo-dev libmcrypt-dev libpng-dev libxslt-dev libpq-dev nodejs \
+  && apt-get install -y  libicu57 libicu-dev libfreetype6-dev libjpeg62-turbo-dev libmcrypt-dev libpng-dev libxslt-dev libpq-dev nodejs git \
   && docker-php-ext-configure gd --with-freetype-dir=/usr/include --with-jpeg-dir=/usr/include \
   && docker-php-ext-install -j$(nproc) intl mysqli pdo_pgsql pdo_mysql pdo gd xsl intl soap \
   && pecl install mcrypt-1.0.1 \
@@ -22,7 +22,8 @@ RUN apt-get update \
   && npm install -g autoconfig eslint@"<3.0.0" \
   && cd /tmp \
   && npm install -j$(nproc) grunt-sass@"^1.0.0" \
-  && rm /tmp/* -rf \
+  && cp /tmp/node_modules/node-sass/vendor/linux-x64-57/binding.node /root/.npm/node-sass/3.13.1/linux-x64-48_binding.node \
+  && rm /tmp/* /var/lib/apt/lists/* -rf \
   && cp -a ~/.npm ~www-data/.npm \
   && chown www-data:www-data ~www-data/.npm -R \
   && pear install pear/Http_Request2 \
