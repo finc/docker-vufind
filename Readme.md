@@ -24,10 +24,10 @@ Weiterhin wurde ein eigener *entrypoint* erstellt, welcher den Pfadanteil der Re
 man bei Container-Start die Umgebungsvariable `BASE_PATH=/vufind` mitgeben.
 
     docker run \
-		  -v /path/to/vufind:/usr/local/vufind:ro \
-			-v /path/to/cache:/var/cache/vufind:ro \
-			-e BASE_PATH=/vufind \
-			services.ub.uni-leipzig.de:10443/bdd_dev/vufind/httpd:latest
+      -v /path/to/vufind:/usr/local/vufind:ro \
+      -v /path/to/cache:/var/cache/vufind:ro \
+      -e BASE_PATH=/vufind \
+      services.ub.uni-leipzig.de:10443/bdd_dev/vufind/httpd:latest
 
 ### nginx
 
@@ -38,10 +38,10 @@ Ebenso wie beim *httpd*-Image werden VuFind-Dateien erwartet und der `BASE_PATH`
 des Pfad-Anteils gesetzt
 
     docker run \
-		  -v /path/to/vufind:/usr/local/vufind:ro \
-			-v /path/to/cache:/var/cache/vufind:ro \
-			-e BASE_PATH=/vufind \
-			services.ub.uni-leipzig.de:10443/bdd_dev/vufind/nginx:latest
+      -v /path/to/vufind:/usr/local/vufind:ro \
+      -v /path/to/cache:/var/cache/vufind:ro \
+      -e BASE_PATH=/vufind \
+      services.ub.uni-leipzig.de:10443/bdd_dev/vufind/nginx:latest
 
 ### php
 
@@ -76,10 +76,10 @@ folgende php-Erweiterungen sind im Image einkompiliert:
 Der Start des Containers erfolgt so:
 
     docker run \
-		  -v /path/to/vufind:/usr/local/vufind \
-			-v /path/to/cache:/var/cache/vufind \
-			-e VUFIND_LOCAL_DIR=/usr/local/vufind/local/staging
-			services.ub.uni-leipzig.de:10443/bdd_dev/vufind/php:5
+      -v /path/to/vufind:/usr/local/vufind \
+      -v /path/to/cache:/var/cache/vufind \
+      -e VUFIND_LOCAL_DIR=/usr/local/vufind/local/staging
+      services.ub.uni-leipzig.de:10443/bdd_dev/vufind/php:5
 
 #### Debug
 
@@ -90,22 +90,13 @@ Gruppenzugehörigkeit des Entwicklers erstellt. Somit kann dieser ohne weitere B
 Dateien und Ordner ändern, bzw. löschen.
 
     docker run \
-		  -v /path/to/vufind:/usr/local/vufind \
-			-v /path/to/cache:/var/cache/vufind \
-			-e VUFIND_LOCAL_DIR=/usr/local/vufind/local/dev
-			services.ub.uni-leipzig.de:10443/bdd_dev/vufind/php:5-debug
+      -v /path/to/vufind:/usr/local/vufind \
+      -v /path/to/cache:/var/cache/vufind \
+      -e VUFIND_LOCAL_DIR=/usr/local/vufind/local/dev \
+      services.ub.uni-leipzig.de:10443/bdd_dev/vufind/php:5-debug
 
-### util
 
-*util* ist ein Hilfs-Image, welches einmalige Aufgaben, beispielsweise zur Abhängigkeitsauflösung
- und Konfiguration ausführen kann. Diese Aufgaben müssen ausgeführt werden, bevor VuFind als
- Applikation genutzt werden kann.
-
- Das Image basiert auf dem offiziellen *composer*-Image und installiert folgende Tools:
-
- * phing
- * eslint
- * autoconfig
+#### phing
 
 Mit der Abhängigkeitsauflösung von VuFind mittels `composer` kommen noch weitere Entwicklerwerkzeuge,
 wie
@@ -119,12 +110,61 @@ wie
 * pdepend
 * phploc
 
-#### phing
+*phing* wird genutzt, um die Standard-VuFind Tasks aufzurufen, z.B.:
 
-*phing* wird genutzt, um die Standard-VuFind Tasks aufzurufen:
+    docker run --rm -ti \
+      -v /path/to/vufind:/usr/local/vufind \
+      services.ub.uni-leipzig.de:10443/bdd_dev/vufind/util:latest \
+      phing composer
 
+um PHP-Abhängigkeiten zu installieren.
 
+    docker run --rm -ti \
+      -v /path/to/vufind:/usr/local/vufind \
+      services.ub.uni-leipzig.de:10443/bdd_dev/vufind/util:latest \
+      phing phpunit
 
+um PHPUnit-Tests abzuarbeiten
+
+    docker run --rm -ti \
+      -v /path/to/vufind:/usr/local/vufind \
+      services.ub.uni-leipzig.de:10443/bdd_dev/vufind/util:latest \
+      phing phpcs-console
+
+um den PHP-Code-Sniffer auszuführen
+
+#### autoconfig
+
+*autoconfig* erstellt aus Umgebungsvariablen und/oder commandline-options eine funktionstüchtige
+VuFind-Konfiguration, basierend auf einer Standardkonfiguration. Die erstellte Konfiguration erbt
+von der Standardkonfiguration und überschreibt individuelle Einstellungen.
+
+    docker run --rm -ti \
+      -v /path/to/vufind:/usr/local/vufind \
+      -e VUFIND_SITE=local \
+      -e VUFIND_INSTANCE=staging \
+      -e VF_config_ini__Database__database=mysql://vufind:vufindpw@db/vufind \
+      -e VF_config_ini__Authentication__hash_passwords=true \
+      -e VF_config_ini__Authentication__encrypt_ils_password=true \
+      services.ub.uni-leipzig.de:10443/bdd_dev/vufind/util:latest \
+      autoconfig vufind deploy
+
+Dieser Befehl erstellt eine neue Konfiguration unter `/usr/local/vufind/local/staging`, welche von
+der Standardkonfiguration unter `/usr/local/vufind/local` ableitet und Einstellungen
+
+    [Database]
+    database = mysql://vufind:vufindpw@db/vufind
+
+    [Authentication]
+    hash_passwords = true
+    encrypt_ils_password = true
+
+in der Datei `config.ini` setzt.
+
+Weiterhin wird Anhand der Datenbank-Konfiguration eine Datenbank auf dem Datenbank-Server erstellt,
+sofern nicht vorhanden und zugreifbar.
+
+Weitere Informationen findet sich in der [Dokumentation zu *autoconfig*][3]
 # Todo
 
 * Solr
@@ -134,3 +174,4 @@ wie
 
 [1]: https://store.docker.com/images/httpd
 [2]: https://store.docker.com/images/nginx
+[3]: https://ubleipzig.github.io/autoconfig/
