@@ -12,9 +12,11 @@ httpd_image:
   script:
   - mkdir -p ~/.docker && echo "$DOCKER_AUTH_CONFIG" >~/.docker/config.json
   - docker build --pull -t services.ub.uni-leipzig.de:11443/bdd_dev/vufind/httpd:latest -f dockerfiles/Dockerfile.httpd .
+  - docker build --pull -t services.ub.uni-leipzig.de:11443/bdd_dev/vufind/httpd:vufind1 -f dockerfiles/Dockerfile.httpd:vufind1 .
   - docker tag services.ub.uni-leipzig.de:11443/bdd_dev/vufind/httpd:latest services.ub.uni-leipzig.de:11443/bdd_dev/vufind/httpd:${CI_PIPELINE_ID}
   - docker push services.ub.uni-leipzig.de:11443/bdd_dev/vufind/httpd:${CI_PIPELINE_ID}
   - docker push services.ub.uni-leipzig.de:11443/bdd_dev/vufind/httpd:latest
+  - docker push services.ub.uni-leipzig.de:11443/bdd_dev/vufind/httpd:vufind1
   tags:
   - docker
 
@@ -45,10 +47,10 @@ php_image:
   - docker:dind
   script:
   - mkdir -p ~/.docker && echo "$DOCKER_AUTH_CONFIG" >~/.docker/config.json
-  - for tag in 5 5-debug 7 7-debug; do docker build -t services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:${tag} -f dockerfiles/Dockerfile.php:${tag} .; done
-  - for tag in 5 5-debug 7 7-debug; do docker tag services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:${tag} services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:${tag}-${CI_PIPELINE_ID}; done
+  - for tag in 5 5-debug 7 7-debug 5.3-debug-vufind1; do docker build -t services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:${tag} -f dockerfiles/Dockerfile.php:${tag} .; done
+  - for tag in 5 5-debug 7 7-debug 5.3-debug-vufind1; do docker tag services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:${tag} services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:${tag}-${CI_PIPELINE_ID}; done
   - docker tag services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:7 services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:latest
-  - for tag in 5 5-debug 7 7-debug; do docker push services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:${tag}; docker push services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:${tag}-${CI_PIPELINE_ID}; done
+  - for tag in 5 5-debug 7 7-debug 5.3-debug-vufind1; do docker push services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:${tag}; docker push services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:${tag}-${CI_PIPELINE_ID}; done
   - docker push services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:latest
   tags:
   - docker
