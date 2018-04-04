@@ -1,1 +1,34 @@
-site_name: My Docs
+site_name: Docker-VuFind
+site_url:  https://ubleipzig.github.io/docker-vufind/
+site_description: VuFind ausrollen - unabhängig von der Umgebung - auf Basis von Docker-Services.
+site_author: Ulf Seltmann <ulf.seltmann@uni-leipzig.de
+
+repo_url: https://git.sc.uni-leipzig.de/ubl/bdd_dev/docker-vufind
+edit_uri: ""
+
+pages:
+    - Home: index.md
+    - Services:
+        - Apache2: services/httpd.md
+        - Nginx: services/nginx.md
+        - PHP: services/php.md
+    - Workflow:
+        - docker-compose: workflow/docker-compose.md
+        - GIT: workflow/git.md
+        - Gitlab: workflow/gitlab.md
+        - Alpha: workflow/alpha.md
+        - Staging: workflow/staging.md
+    - About:
+        - Release Notes: about/release-notes.md
+        - License: about/license.md
+
+markdown_extensions:
+    - toc:
+        permalink: 
+    - admonition
+    - def_list
+
+copyright: Copyright &copy; 2018 Leipzig University Library
+
+plugins:
+    - search
