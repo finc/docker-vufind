@@ -1,11 +1,9 @@
 stages:
 - image
+- mirror
 
 httpd_image:
   stage: image
-  only:
-  - ng
-  - master
   image: docker:latest
   services:
   - docker:dind
@@ -19,12 +17,13 @@ httpd_image:
   - docker push services.ub.uni-leipzig.de:11443/bdd_dev/vufind/httpd:vufind1
   tags:
   - docker
+  only:
+  - httpd
+  except:
+  - branches
 
 nginx_image:
   stage: image
-  only:
-  - ng
-  - master
   image: docker:latest
   services:
   - docker:dind
@@ -36,21 +35,34 @@ nginx_image:
   - docker push services.ub.uni-leipzig.de:11443/bdd_dev/vufind/nginx:latest
   tags:
   - docker
+  only:
+  - nginx
+  except:
+  - branches
 
 php_image:
   stage: image
-  only:
-  - ng
-  - master
   image: docker:latest
   services:
   - docker:dind
   script:
   - mkdir -p ~/.docker && echo "$DOCKER_AUTH_CONFIG" >~/.docker/config.json
-  - for tag in 5 5-debug 7 7-debug 5.3-debug-vufind1; do docker build -t services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:${tag} -f dockerfiles/Dockerfile.php:${tag} .; done
-  - for tag in 5 5-debug 7 7-debug 5.3-debug-vufind1; do docker tag services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:${tag} services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:${tag}-${CI_PIPELINE_ID}; done
+  - for tag in 5 5-debug 7 7-debug 5.3-debug-vufind1; do docker build -t services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:${tag}-${suffix} -f dockerfiles/Dockerfile.php:${tag} .; done
+  - for tag in 5 5-debug 7 7-debug 5.3-debug-vufind1; do docker tag services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:${tag}-${suffix} services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:${tag}-${CI_PIPELINE_ID}; done
   - docker tag services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:7 services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:latest
   - for tag in 5 5-debug 7 7-debug 5.3-debug-vufind1; do docker push services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:${tag}; docker push services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:${tag}-${CI_PIPELINE_ID}; done
   - docker push services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:latest
   tags:
   - docker
+  only:
+  - php
+  except:
+  - branches
+
+github_mirror:
+  stage: mirror
+  image: docker:latest
+  script:
+  - git remote add github https://useltmann:${GITHUB_TOKEN}@github.com:finc/docker-vufind2.git
+  - git push --mirror github
+
