@@ -65,4 +65,5 @@ github_mirror:
   script:
   - git remote add github https://useltmann:${GITHUB_TOKEN}@github.com:finc/docker-vufind2.git
   - git push --mirror github
-
+  tags:
+  - docker
