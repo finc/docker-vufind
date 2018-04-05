@@ -66,7 +66,7 @@ github_mirror:
     entrypoint: [ "/bin/sh", "-c" ]
   script:
   - git branch -a
-  - git remote delete github || true
+  - git remote remove github || true
   - git remote add github https://useltmann:${GITHUB_TOKEN}@github.com/finc/docker-vufind2.git || true
   - git push --mirror github
   - git branch -a
