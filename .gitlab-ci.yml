@@ -71,7 +71,7 @@ github_mirror:
   - git branch -a
   - git remote add github https://useltmann:${GITHUB_TOKEN}@github.com/finc/docker-vufind2.git
   - git fetch github
-  - git push --mirror github
+  - git push github --mirror
   - git branch -a
   tags:
   - docker
