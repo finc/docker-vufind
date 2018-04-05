@@ -12,9 +12,13 @@ httpd_image:
     export suffix=`expr $CI_COMMIT_TAG ':' 'httpd/2.4-\(.*\)'`
     docker build --pull -t services.ub.uni-leipzig.de:11443/bdd_dev/vufind/httpd:2.4-${suffix} -f dockerfiles/Dockerfile.httpd:2.4 .
     docker push services.ub.uni-leipzig.de:11443/bdd_dev/vufind/httpd:2.4-${suffix}
+    docker tag services.ub.uni-leipzig.de:11443/bdd_dev/vufind/httpd:2.4-${suffix} ubleipzig/vufind-httpd:2.4-${suffix}
+    docker push ubleipzig/vufind-httpd:2.4-${suffix}
     for tag in "latest" "2.4"; do
       docker tag services.ub.uni-leipzig.de:11443/bdd_dev/vufind/httpd:2.4-${suffix} services.ub.uni-leipzig.de:11443/bdd_dev/vufind/httpd:${tag}
       docker push services.ub.uni-leipzig.de:11443/bdd_dev/vufind/httpd:${tag}
+      docker tag ubleipzig/vufind-httpd:2.4-${suffix} ubleipzig/vufind-httpd:${tag}
+      docker push ubleipzig/vufind-httpd:${tag}
     done
   tags:
   - docker
@@ -33,9 +37,13 @@ httpd_vufind1_image:
     export suffix=`expr ${CI_COMMIT_TAG} ':' 'httpd-vufind1/2.4-\(.*\)'`
     docker build --pull -t services.ub.uni-leipzig.de:11443/bdd_dev/vufind/httpd-vufind1:2.4-${suffix} -f dockerfiles/Dockerfile.httpd-vufind1:2.4 .
     docker push services.ub.uni-leipzig.de:11443/bdd_dev/vufind/httpd-vufind1:2.4-${suffix}
+    docker tag services.ub.uni-leipzig.de:11443/bdd_dev/vufind/httpd-vufind1:2.4-${suffix} ubleipzig/vufind-httpd-vufind1:2.4-${suffix}
+    docker push ubleipzig/vufind-httpd-vufind1:2.4-${suffix}
     for tag in "latest" "2.4"; do
       docker tag services.ub.uni-leipzig.de:11443/bdd_dev/vufind/httpd-vufind1:2.4-${suffix} services.ub.uni-leipzig.de:11443/bdd_dev/vufind/httpd-vufind1:${tag}
       docker push services.ub.uni-leipzig.de:11443/bdd_dev/vufind/httpd-vufind1:${tag}
+      docker tag ubleipzig/vufind-httpd-vufind1:2.4-${suffix} ubleipzig/vufind-httpd-vufind1:${tag}
+      docker push ubleipzig/vufind-httpd-vufind1:${tag}
     done
   tags:
   - docker
@@ -54,9 +62,13 @@ nginx_image:
     export suffix=`expr ${CI_COMMIT_TAG} ':' 'nginx/1.13-\(.*\)'`
     docker build --pull -t services.ub.uni-leipzig.de:11443/bdd_dev/vufind/nginx:1.13-${suffix} -f dockerfiles/Dockerfile.nginx:1.13 .
     docker push services.ub.uni-leipzig.de:11443/bdd_dev/vufind/nginx:1.13-${suffix}
+    docker tag services.ub.uni-leipzig.de:11443/bdd_dev/vufind/nginx:1.13-${suffix} ubleipzig/vufind-nginx:1.13-${suffix}
+    docker push ubleipzig/vufind-nginx:1.13-${suffix}
     for tag in "latest" "1.13"; do
       docker tag services.ub.uni-leipzig.de:11443/bdd_dev/vufind/nginx:1.13-${suffix} services.ub.uni-leipzig.de:11443/bdd_dev/vufind/nginx:${tag}
       docker push services.ub.uni-leipzig.de:11443/bdd_dev/vufind/nginx:${tag}
+      docker tag ubleipzig/vufind-nginx:1.13-${suffix} ubleipzig/vufind-nginx:${tag}
+      docker push ubleipzig/vufind-nginx:${tag}
     done
 
   tags:
@@ -76,12 +88,18 @@ php_7_image:
     export suffix=`expr ${CI_COMMIT_TAG} ':' 'php/7-\(.*\)'`
     for tag in 7 7-debug; do
       docker build -t services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:${tag}-${suffix} -f dockerfiles/Dockerfile.php:${tag} .
-      docker tag services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:${tag}-${suffix} services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:${tag}
       docker push services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:${tag}-${suffix}
+      docker tag services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:${tag}-${suffix} services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:${tag}
       docker push services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:${tag}
+      docker tag services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:${tag}-${suffix} ubleipzig/vufind-php:${tag}-${suffix}
+      docker push ubleipzig/vufind-php:${tag}-${suffix}
+      docker tag ubleipzig/vufind-php:${tag}-${suffix} ubleipzig/vufind-php:${tag}
+      docker push ubleipzig/vufind-php:${tag}
     done
     docker tag services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:7-${suffix} services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:latest
     docker push services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:latest
+    docker tag ubleipzig/vufind-php:7-${suffix} ubleipzig/vufind-php:latest
+    docker push ubleipzig/vufind-php:latest
   tags:
   - docker
   only:
@@ -100,9 +118,13 @@ php_5_image:
 
     for tag in 5 5-debug; do
       docker build -t services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:${tag}-${suffix} -f dockerfiles/Dockerfile.php:${tag} .
-      docker tag services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:${tag}-${suffix} services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:${tag}
       docker push services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:${tag}-${suffix}
+      docker tag services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:${tag}-${suffix} services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:${tag}
       docker push services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:${tag}
+      docker tag services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:${tag}-${suffix} ubleipzig/vufind-php:${tag}-${suffix}
+      docker push ubleipzig/vufind-php:${tag}-${suffix}
+      docker tag ubleipzig/vufind-php:${tag}-${suffix} ubleipzig/vufind-php:${tag}
+      docker push ubleipzig/vufind-php:${tag}
     done
   tags:
   - docker
@@ -120,9 +142,14 @@ php_5_vufind1_image:
     mkdir -p ~/.docker && echo "$DOCKER_AUTH_CONFIG" >~/.docker/config.json
     export suffix=`expr ${CI_COMMIT_TAG} ':' 'php-vufind1/5.3-(.*\)'`
     docker build -t services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php-vufind1:5.3-debug-${suffix} -f dockerfiles/Dockerfile.php-vufind1:5.3-debug .
+    docker push services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php-vufind1:5.3-debug-${suffix}
     docker tag services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php-vufind1:5.3-debug-${suffix} services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php-vufind1:5.3-debug
-    docker push services.ub.uni-leipzig.de:11443/bdd_dev/vufind/nginx:5.3-debug-${suffix}
-    docker push services.ub.uni-leipzig.de:11443/bdd_dev/vufind/nginx:5.3-debug
+    docker push services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php-vufind1:5.3-debug
+    docker tag services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php-vufind1:5.3-debug-${suffix} ubleipzig/vufind-php-vufind1:5.3-debug-${suffix}
+    docker push ubleipzig/vufind-php-vufind1:5.3-debug-${suffix}
+    docker tag ubleipzig/vufind-php-vufind1:5.3-debug-${suffix} ubleipzig/vufind-php-vufind1:5.3-debug
+    docker push ubleipzig/vufind-php-vufind1:5.3-debug
+
   tags:
   - docker
   only:
