@@ -65,8 +65,8 @@ github_mirror:
     name: alpine/git
     entrypoint: [ "/bin/sh", "-c" ]
   variables:
-  - GIT_STRATEGY: clone
-  - GIT_CHECKOUT: "false"
+    GIT_STRATEGY: clone
+    GIT_CHECKOUT: "false"
   script:
   - git branch -a
   - git remote add github https://useltmann:${GITHUB_TOKEN}@github.com/finc/docker-vufind2.git
