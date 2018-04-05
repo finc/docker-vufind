@@ -66,12 +66,11 @@ github_mirror:
     entrypoint: [ "/bin/sh", "-c" ]
   variables:
     GIT_STRATEGY: clone
-    GIT_CHECKOUT: "false"
+    GIT_CHECKOUT: "true"
   script:
   - git branch -a
   - git remote add github https://useltmann:${GITHUB_TOKEN}@github.com/finc/docker-vufind2.git
-  - git fetch github
-  - git push github --mirror
+  - git push --mirror github
   - git branch -a
   tags:
   - docker
