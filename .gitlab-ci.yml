@@ -65,6 +65,8 @@ github_mirror:
     name: alpine/git
     entrypoint: [ "/bin/sh", "-c" ]
   script:
+  - git remote -v
+  - git branch -a
   - git remote add github-https https://useltmann:${GITHUB_TOKEN}@github.com/finc/docker-vufind2.git
   - git push --mirror github-https
   tags:
