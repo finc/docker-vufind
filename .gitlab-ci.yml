@@ -138,10 +138,11 @@ github_mirror:
   variables:
     GIT_STRATEGY: clone
     GIT_CHECKOUT: "false"
-  script:
-  - git checkout ${CI_COMMIT_REF_NAME}
-  - git remote add github https://useltmann:${GITHUB_TOKEN}@github.com/finc/docker-vufind2.git
-  - git push --mirror github
-  - git branch -a
+  script: |
+    cd /tmp
+    git clone --mirror ${CI_REPOSITORY_URL} project
+    cd project
+    git remote add github https://useltmann:${GITHUB_TOKEN}@github.com/finc/docker-vufind2.git
+    git push --mirror github
   tags:
   - docker
