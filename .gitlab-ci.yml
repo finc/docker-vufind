@@ -61,7 +61,7 @@ php_image:
 
 github_mirror:
   stage: mirror
-  image: docker:latest
+  image: alpine/git
   script:
   - git remote add github https://useltmann:${GITHUB_TOKEN}@github.com:finc/docker-vufind2.git
   - git push --mirror github
