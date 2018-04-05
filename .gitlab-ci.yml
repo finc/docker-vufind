@@ -30,7 +30,7 @@ httpd_vufind1_image:
   - docker:dind
   script: |
     mkdir -p ~/.docker && echo "$DOCKER_AUTH_CONFIG" >~/.docker/config.json
-    export tag=`expr ${CI_COMMIT_TAG} ':' '^httpd-vufind1/2.4-\(.*\)$'`
+    export tag=`expr ${CI_COMMIT_TAG} ':' 'httpd-vufind1/2.4-\(.*\)'`
     docker build --pull -t services.ub.uni-leipzig.de:11443/bdd_dev/vufind/httpd-vufind1:2.4-${suffix} -f dockerfiles/Dockerfile.httpd-vufind1:2.4 .
     docker push services.ub.uni-leipzig.de:11443/bdd_dev/vufind/httpd-vufind1:2.4-${suffix}
     for tag in "latest" "2.4"; do
@@ -51,9 +51,9 @@ nginx_image:
   - docker:dind
   script: |
     mkdir -p ~/.docker && echo "$DOCKER_AUTH_CONFIG" >~/.docker/config.json
-    export suffix=`expr ${CI_COMMIT_TAG} ':' '^nginx/1.13-\(.*\)$'`
+    export suffix=`expr ${CI_COMMIT_TAG} ':' 'nginx/1.13-\(.*\)'`
     docker build --pull -t services.ub.uni-leipzig.de:11443/bdd_dev/vufind/nginx:1.13-${suffix} -f dockerfiles/Dockerfile.nginx:1.13 .
-    docker push services.ub.uni-leipzig.de:11443/bdd_dev/vufind/nginx:${tag}-${suffix}
+    docker push services.ub.uni-leipzig.de:11443/bdd_dev/vufind/nginx:1.13-${suffix}
     for tag in "latest" "1.13"; do
       docker tag services.ub.uni-leipzig.de:11443/bdd_dev/vufind/nginx:1.13-${suffix} services.ub.uni-leipzig.de:11443/bdd_dev/vufind/nginx:${tag}
       docker push services.ub.uni-leipzig.de:11443/bdd_dev/vufind/nginx:${tag}
@@ -73,7 +73,7 @@ php_7_image:
   - docker:dind
   script: |
     mkdir -p ~/.docker && echo "$DOCKER_AUTH_CONFIG" >~/.docker/config.json
-    export suffix=`expr ${CI_COMMIT_TAG} ':' '^php/7-\(.*\)$'`
+    export suffix=`expr ${CI_COMMIT_TAG} ':' 'php/7-\(.*\)'`
     for tag in 7 7-debug; do
       docker build -t services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:${tag}-${suffix} -f dockerfiles/Dockerfile.php:${tag} .
       docker tag services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:${tag}-${suffix} services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:${tag}
@@ -96,7 +96,7 @@ php_5_image:
   - docker:dind
   script: |
     mkdir -p ~/.docker && echo "$DOCKER_AUTH_CONFIG" >~/.docker/config.json
-    export suffix=`expr ${CI_COMMIT_TAG} ':' '^php/5-\(.*\)$'`
+    export suffix=`expr ${CI_COMMIT_TAG} ':' 'php/5-\(.*\)'`
 
     for tag in 5 5-debug; do
       docker build -t services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:${tag}-${suffix} -f dockerfiles/Dockerfile.php:${tag} .
@@ -118,7 +118,7 @@ php_5_vufind1_image:
   - docker:dind
   script: |
     mkdir -p ~/.docker && echo "$DOCKER_AUTH_CONFIG" >~/.docker/config.json
-    export suffix=`expr ${CI_COMMIT_TAG} ':' '^php-vufind1/5.3-(.*\)$'`
+    export suffix=`expr ${CI_COMMIT_TAG} ':' 'php-vufind1/5.3-(.*\)'`
     docker build -t services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php-vufind1:5.3-debug-${suffix} -f dockerfiles/Dockerfile.php-vufind1:5.3-debug .
     docker tag services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php-vufind1:5.3-debug-${suffix} services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php-vufind1:5.3-debug
     docker push services.ub.uni-leipzig.de:11443/bdd_dev/vufind/nginx:5.3-debug-${suffix}
