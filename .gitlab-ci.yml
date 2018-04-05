@@ -64,10 +64,12 @@ github_mirror:
   image:
     name: alpine/git
     entrypoint: [ "/bin/sh", "-c" ]
+  variables:
+  - GIT_STRATEGY: clone
+  - GIT_CHECKOUT: "false"
   script:
   - git branch -a
-  - git remote remove github || true
-  - git remote add github https://useltmann:${GITHUB_TOKEN}@github.com/finc/docker-vufind2.git || true
+  - git remote add github https://useltmann:${GITHUB_TOKEN}@github.com/finc/docker-vufind2.git
   - git fetch github
   - git push --mirror github
   - git branch -a
