@@ -9,7 +9,7 @@ httpd_image:
   - docker:dind
   script: |
     mkdir -p ~/.docker && echo "$DOCKER_AUTH_CONFIG" >~/.docker/config.json
-    export tag=`expr ${CI_COMMIT_TAG} ':' '^httpd/\(.*\)$'`
+    export tag=`expr $CI_COMMIT_TAG ':' '^httpd/\(.*\)$'`
     docker build --pull -t services.ub.uni-leipzig.de:11443/bdd_dev/vufind/httpd:latest -f dockerfiles/Dockerfile.httpd .
     docker tag services.ub.uni-leipzig.de:11443/bdd_dev/vufind/httpd:latest services.ub.uni-leipzig.de:11443/bdd_dev/vufind/httpd:$tag
     docker push services.ub.uni-leipzig.de:11443/bdd_dev/vufind/httpd:$tag
