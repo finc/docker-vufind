@@ -68,7 +68,7 @@ github_mirror:
   - git branch -a
   - git remote remove github || true
   - git remote add github https://useltmann:${GITHUB_TOKEN}@github.com/finc/docker-vufind2.git || true
-  - git push --all --tags github
+  - git push --all github
   - git branch -a
   tags:
   - docker
