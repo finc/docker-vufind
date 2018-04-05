@@ -61,8 +61,9 @@ php_image:
 
 github_mirror:
   stage: mirror
-  image: alpine/git
-  entrypoint: [ "/bin/sh", "-c" ]
+  image:
+    name: alpine/git
+    entrypoint: [ "/bin/sh", "-c" ]
   script:
   - git remote add github https://useltmann:${GITHUB_TOKEN}@github.com:finc/docker-vufind2.git
   - git push --mirror github
