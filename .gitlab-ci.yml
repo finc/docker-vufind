@@ -9,16 +9,34 @@ httpd_image:
   - docker:dind
   script:
   - mkdir -p ~/.docker && echo "$DOCKER_AUTH_CONFIG" >~/.docker/config.json
+  - export $tag=`expr ${CI_COMMIT_TAG} ':' '^httpd/\(.*\)$'`
   - docker build --pull -t services.ub.uni-leipzig.de:11443/bdd_dev/vufind/httpd:latest -f dockerfiles/Dockerfile.httpd .
-  - docker build --pull -t services.ub.uni-leipzig.de:11443/bdd_dev/vufind/httpd:vufind1 -f dockerfiles/Dockerfile.httpd:vufind1 .
-  - docker tag services.ub.uni-leipzig.de:11443/bdd_dev/vufind/httpd:latest services.ub.uni-leipzig.de:11443/bdd_dev/vufind/httpd:${CI_PIPELINE_ID}
-  - docker push services.ub.uni-leipzig.de:11443/bdd_dev/vufind/httpd:${CI_PIPELINE_ID}
+  - docker tag services.ub.uni-leipzig.de:11443/bdd_dev/vufind/httpd:latest services.ub.uni-leipzig.de:11443/bdd_dev/vufind/httpd:$tag
+  - docker push services.ub.uni-leipzig.de:11443/bdd_dev/vufind/httpd:$tag
   - docker push services.ub.uni-leipzig.de:11443/bdd_dev/vufind/httpd:latest
-  - docker push services.ub.uni-leipzig.de:11443/bdd_dev/vufind/httpd:vufind1
   tags:
   - docker
   only:
-  - httpd
+  - ^httpd/
+  except:
+  - branches
+
+httpd_vufind1_image:
+  stage: image
+  image: docker:latest
+  services:
+  - docker:dind
+  script:
+  - mkdir -p ~/.docker && echo "$DOCKER_AUTH_CONFIG" >~/.docker/config.json
+  - export tag=`expr ${CI_COMMIT_TAG} ':' '^httpd-vufind1/\(.*\)$'`
+  - docker build --pull -t services.ub.uni-leipzig.de:11443/bdd_dev/vufind/httpd-vufind1:latest -f dockerfiles/Dockerfile.httpd-vufind1 .
+  - docker tag services.ub.uni-leipzig.de:11443/bdd_dev/vufind/httpd-vufind1:latest services.ub.uni-leipzig.de:11443/bdd_dev/vufind/httpd-vufind1:${tag}
+  - docker push services.ub.uni-leipzig.de:11443/bdd_dev/vufind/httpd-vufind1:${tag}
+  - docker push services.ub.uni-leipzig.de:11443/bdd_dev/vufind/httpd-vufind1:latest
+  tags:
+  - docker
+  only:
+  - ^httpd-vufind1/
   except:
   - branches
 
@@ -29,33 +47,78 @@ nginx_image:
   - docker:dind
   script:
   - mkdir -p ~/.docker && echo "$DOCKER_AUTH_CONFIG" >~/.docker/config.json
+  - export tag=`expr ${CI_COMMIT_TAG} ':' '^nginx/\(.*\)$'`
   - docker build --pull -t services.ub.uni-leipzig.de:11443/bdd_dev/vufind/nginx:latest -f dockerfiles/Dockerfile.nginx .
-  - docker tag services.ub.uni-leipzig.de:11443/bdd_dev/vufind/nginx:latest services.ub.uni-leipzig.de:11443/bdd_dev/vufind/nginx:${CI_PIPELINE_ID}
-  - docker push services.ub.uni-leipzig.de:11443/bdd_dev/vufind/nginx:${CI_PIPELINE_ID}
+  - docker tag services.ub.uni-leipzig.de:11443/bdd_dev/vufind/nginx:latest services.ub.uni-leipzig.de:11443/bdd_dev/vufind/nginx:${tag}
+  - docker push services.ub.uni-leipzig.de:11443/bdd_dev/vufind/nginx:${tag}
   - docker push services.ub.uni-leipzig.de:11443/bdd_dev/vufind/nginx:latest
   tags:
   - docker
   only:
-  - nginx
+  - ^nginx/
   except:
   - branches
 
-php_image:
+php_7_image:
   stage: image
   image: docker:latest
   services:
   - docker:dind
   script:
   - mkdir -p ~/.docker && echo "$DOCKER_AUTH_CONFIG" >~/.docker/config.json
-  - for tag in 5 5-debug 7 7-debug 5.3-debug-vufind1; do docker build -t services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:${tag}-${suffix} -f dockerfiles/Dockerfile.php:${tag} .; done
-  - for tag in 5 5-debug 7 7-debug 5.3-debug-vufind1; do docker tag services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:${tag}-${suffix} services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:${tag}-${CI_PIPELINE_ID}; done
+  - export suffix=`expr ${CI_COMMIT_TAG} ':' '^php/7-\(.*\)$'`
+  - for tag in 7 7-debug; do docker build -t services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:${tag}-${suffix} -f dockerfiles/Dockerfile.php:${tag} .; done
+  - for tag in 7 7-debug; do docker tag services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:${tag}-${suffix} services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:${tag}-${suffix}; done
+  - docker tag services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:7-${suffix} services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:7
+  - docker tag services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:7-debug-${suffix} services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:7-debug
   - docker tag services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:7 services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:latest
-  - for tag in 5 5-debug 7 7-debug 5.3-debug-vufind1; do docker push services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:${tag}; docker push services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:${tag}-${CI_PIPELINE_ID}; done
+  - for tag in 7 7-debug; do docker push services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:${tag}; docker push services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:${tag}-${suffix}; done
   - docker push services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:latest
   tags:
   - docker
   only:
-  - php
+  - ^php/7
+  except:
+  - branches
+
+php_5_image:
+  stage: image
+  image: docker:latest
+  services:
+  - docker:dind
+  script:
+  - mkdir -p ~/.docker && echo "$DOCKER_AUTH_CONFIG" >~/.docker/config.json
+  - export suffix=`expr ${CI_COMMIT_TAG} ':' '^php/5-\(.*\)$'`
+  - for tag in 5 5-debug; do docker build -t services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:${tag}-${suffix} -f dockerfiles/Dockerfile.php:${tag} .; done
+  - for tag in 5 5-debug; do docker tag services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:${tag}-${suffix} services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:${tag}-${suffix}; done
+  - docker tag services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:5-${suffix} services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:5
+  - docker tag services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:5-debug-${suffix} services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:5-debug
+  - docker tag services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:5 services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:latest
+  - for tag in 5 5-debug; do docker push services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:${tag}; docker push services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:${tag}-${suffix}; done
+  - docker push services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php:latest
+  tags:
+  - docker
+  only:
+  - ^php/5
+  except:
+  - branches
+
+php_5_vufind1_image:
+  stage: image
+  image: docker:latest
+  services:
+  - docker:dind
+  script:
+  - mkdir -p ~/.docker && echo "$DOCKER_AUTH_CONFIG" >~/.docker/config.json
+  - export suffix=`expr ${CI_COMMIT_TAG} ':' '^php-vufind1/5.3-(.*\)$'`
+  - docker build -t services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php-vufind1:5.3-debug-${suffix} -f dockerfiles/Dockerfile.php-vufind1:5.3-debug .
+  - docker tag services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php-vufind1:5.3-debug-${suffix} services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php-vufind1:5.3-debug
+  - docker push services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php-vufind1:5.3-debug-${suffix}
+  - docker push services.ub.uni-leipzig.de:11443/bdd_dev/vufind/php-vufind1:5.3-debug
+  tags:
+  - docker
+  only:
+  - ^php-vufind1/
   except:
   - branches
 
@@ -66,9 +129,8 @@ github_mirror:
     entrypoint: [ "/bin/sh", "-c" ]
   variables:
     GIT_STRATEGY: clone
-    GIT_CHECKOUT: "true"
+    GIT_CHECKOUT: "false"
   script:
-  - echo git checkout ${CI_COMMIT_REF_NAME}
   - git checkout ${CI_COMMIT_REF_NAME}
   - git remote add github https://useltmann:${GITHUB_TOKEN}@github.com/finc/docker-vufind2.git
   - git push --mirror github
