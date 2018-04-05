@@ -68,7 +68,8 @@ github_mirror:
     GIT_STRATEGY: clone
     GIT_CHECKOUT: "true"
   script:
-  - git checkout ${CI_COMMIT_BRANCH}
+  - echo git checkout ${CI_COMMIT_REF_NAME}
+  - git checkout ${CI_COMMIT_REF_NAME}
   - git remote add github https://useltmann:${GITHUB_TOKEN}@github.com/finc/docker-vufind2.git
   - git push --mirror github
   - git branch -a
